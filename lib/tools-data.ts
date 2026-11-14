@@ -2,13 +2,14 @@ export type SiloCategory =
   | 'compress'
   | 'convert'
   | 'social-resize'
-  | 'privacy-dev';
+  | 'privacy-dev'
+  | 'ai-tools';
 
 export interface SiloPillar {
   id: SiloCategory;
   name: string;
   tabLabel: string;
-  href: `/${SiloCategory}`;
+  href: string;
   headline: string;
   description: string;
 }
@@ -28,7 +29,12 @@ export type ToolMode =
   | 'svg-to-png'
   | 'base64'
   | 'circle-crop'
-  | 'color-picker';
+  | 'color-picker'
+  | 'handwriting-to-text'
+  | 'hindi-handwriting-to-text'
+  | 'image-to-code'
+  | 'html-to-image'
+  | 'gemini-image-to-prompt';
 
 export interface HubTool {
   id: string;
@@ -46,7 +52,12 @@ export interface HubTool {
     | 'FileCode2'
     | 'Binary'
     | 'CircleDot'
-    | 'Pipette';
+    | 'Pipette'
+    | 'PenLine'
+    | 'Languages'
+    | 'Code2'
+    | 'ImageDown'
+    | 'Wand2';
   tags: ProgrammaticTag[];
   mode: ToolMode;
   defaultPreset?: {
@@ -70,6 +81,26 @@ export interface ShortcutRoute {
   parentToolId: string;
   mode: ToolMode;
   preset?: HubTool['defaultPreset'];
+}
+
+export interface CreatorToolRoute {
+  slug:
+    | 'handwriting-to-text'
+    | 'hindi-handwriting-to-text'
+    | 'image-to-code'
+    | 'html-to-image'
+    | 'gemini-image-to-prompt';
+  href: string;
+  title: string;
+  metaTitle: string;
+  description: string;
+  mode:
+    | 'handwriting-to-text'
+    | 'hindi-handwriting-to-text'
+    | 'image-to-code'
+    | 'html-to-image'
+    | 'gemini-image-to-prompt';
+  badge: string;
 }
 
 export const SILO_PILLARS: SiloPillar[] = [
@@ -108,6 +139,59 @@ export const SILO_PILLARS: SiloPillar[] = [
     headline: 'EXIF Scrubbing, Base64 & Color Extraction',
     description:
       'Strip GPS coordinates and camera EXIF headers, encode/decode Data URIs, and sample HEX/RGB palettes offline.',
+  },
+];
+
+export const CREATOR_TOOLS: CreatorToolRoute[] = [
+  {
+    slug: 'handwriting-to-text',
+    href: '/tools/handwriting-to-text/',
+    title: 'Handwriting to Text (OCR)',
+    metaTitle: 'Handwriting to Text OCR Online | toolimg.online',
+    description:
+      'Convert handwritten notes, whiteboard snapshots, and scanned notebooks into clean editable text.',
+    mode: 'handwriting-to-text',
+    badge: 'Smart Vision OCR',
+  },
+  {
+    slug: 'hindi-handwriting-to-text',
+    href: '/tools/hindi-handwriting-to-text/',
+    title: 'Hindi Handwriting to Text',
+    metaTitle: 'Hindi Handwriting to Text (Devanagari OCR) | toolimg.online',
+    description:
+      'Transcribe handwritten Hindi (Devanagari) notes into clean Unicode text with optional English translation.',
+    mode: 'hindi-handwriting-to-text',
+    badge: 'Devanagari OCR',
+  },
+  {
+    slug: 'image-to-code',
+    href: '/tools/image-to-code/',
+    title: 'Image to Code Generator',
+    metaTitle: 'Image to HTML & Tailwind CSS Code | toolimg.online',
+    description:
+      'Turn any UI screenshot, card design, or wireframe photo into clean HTML, React JSX, and Tailwind CSS code.',
+    mode: 'image-to-code',
+    badge: 'UI to Code',
+  },
+  {
+    slug: 'html-to-image',
+    href: '/tools/html-to-image/',
+    title: 'HTML to Image Converter',
+    metaTitle: 'HTML & CSS to PNG/JPG/WebP Image | toolimg.online',
+    description:
+      'Render custom HTML & CSS snippets directly into crisp 1x or 2x Retina PNG, JPG, or WebP images locally.',
+    mode: 'html-to-image',
+    badge: '100% Client-Side',
+  },
+  {
+    slug: 'gemini-image-to-prompt',
+    href: '/tools/gemini-image-to-prompt/',
+    title: 'Gemini Image to Prompt',
+    metaTitle: 'Image to AI Prompt Generator | toolimg.online',
+    description:
+      'Reverse-engineer any image into detailed Midjourney, Stable Diffusion, video, or structured JSON prompts.',
+    mode: 'gemini-image-to-prompt',
+    badge: 'Prompt Engineer',
   },
 ];
 
@@ -260,6 +344,72 @@ export const CORE_TOOLS: HubTool[] = [
       { label: 'Eyedropper', href: '/privacy-dev/pick-color-from-image' },
     ],
   },
+  {
+    id: 'handwriting-to-text',
+    title: 'Handwriting to Text (OCR)',
+    benefit: 'Extract clean editable text from handwritten notes, notebooks, and whiteboards.',
+    href: '/tools/handwriting-to-text/',
+    category: 'ai-tools',
+    iconName: 'PenLine',
+    mode: 'handwriting-to-text',
+    tags: [
+      { label: 'Handwritten OCR', href: '/tools/handwriting-to-text/' },
+      { label: 'Notes to TXT', href: '/tools/handwriting-to-text/' },
+    ],
+  },
+  {
+    id: 'hindi-handwriting-to-text',
+    title: 'Hindi Handwriting to Text',
+    benefit: 'Transcribe Hindi (Devanagari) handwritten pages into Unicode text cleanly.',
+    href: '/tools/hindi-handwriting-to-text/',
+    category: 'ai-tools',
+    iconName: 'Languages',
+    mode: 'hindi-handwriting-to-text',
+    tags: [
+      { label: 'Devanagari OCR', href: '/tools/hindi-handwriting-to-text/' },
+      { label: 'Hindi Unicode', href: '/tools/hindi-handwriting-to-text/' },
+    ],
+  },
+  {
+    id: 'image-to-code',
+    title: 'Image to Code Generator',
+    benefit: 'Convert UI screenshots and mockups into responsive HTML and Tailwind CSS.',
+    href: '/tools/image-to-code/',
+    category: 'ai-tools',
+    iconName: 'Code2',
+    mode: 'image-to-code',
+    tags: [
+      { label: 'HTML + Tailwind', href: '/tools/image-to-code/' },
+      { label: 'React JSX', href: '/tools/image-to-code/' },
+    ],
+  },
+  {
+    id: 'html-to-image',
+    title: 'HTML to Image Converter',
+    benefit: 'Render HTML & CSS cards into crisp PNG, JPG, or WebP downloads locally.',
+    href: '/tools/html-to-image/',
+    category: 'ai-tools',
+    iconName: 'ImageDown',
+    mode: 'html-to-image',
+    tags: [
+      { label: 'HTML to PNG', href: '/tools/html-to-image/' },
+      { label: '2x Retina', href: '/tools/html-to-image/' },
+    ],
+  },
+  {
+    slug: 'gemini-image-to-prompt',
+    id: 'gemini-image-to-prompt',
+    title: 'Gemini Image to Prompt',
+    benefit: 'Generate detailed Midjourney, Flux, or Stable Diffusion prompts from any photo.',
+    href: '/tools/gemini-image-to-prompt/',
+    category: 'ai-tools',
+    iconName: 'Wand2',
+    mode: 'gemini-image-to-prompt',
+    tags: [
+      { label: 'Image to Prompt', href: '/tools/gemini-image-to-prompt/' },
+      { label: 'JSON Describe', href: '/tools/gemini-image-to-prompt/' },
+    ],
+  } as HubTool,
 ];
 
 export const PROGRAMMATIC_SHORTCUTS: ShortcutRoute[] = [
@@ -332,11 +482,13 @@ export const PROGRAMMATIC_SHORTCUTS: ShortcutRoute[] = [
 ];
 
 export const SILO_SHORTCUT_GROUPS: {
-  pillar: SiloPillar;
+  title: string;
+  href: string;
   links: { label: string; href: string }[];
 }[] = [
   {
-    pillar: SILO_PILLARS[0],
+    title: 'Compress & Size',
+    href: '/compress',
     links: [
       { label: 'Compress Image to 20KB', href: '/compress-image-to-20kb' },
       { label: 'Compress Image to 50KB', href: '/compress/compress-image-to-50kb' },
@@ -344,15 +496,18 @@ export const SILO_SHORTCUT_GROUPS: {
     ],
   },
   {
-    pillar: SILO_PILLARS[1],
+    title: 'Format & HTML',
+    href: '/convert',
     links: [
       { label: 'HEIC to JPG Converter', href: '/convert/heic-to-jpg' },
       { label: 'HEIC to PNG Converter', href: '/heic-to-png' },
       { label: 'SVG to 4K PNG Converter', href: '/convert/svg-to-png' },
+      { label: 'HTML to Image Converter', href: '/tools/html-to-image/' },
     ],
   },
   {
-    pillar: SILO_PILLARS[2],
+    title: 'Social & Passport',
+    href: '/social-resize',
     links: [
       { label: 'Split Image into 3x3 Grid', href: '/split-image-into-3x3-grid' },
       { label: 'Discord Emoji 128x128', href: '/social-resize/discord-emoji-resizer-128x128' },
@@ -362,12 +517,15 @@ export const SILO_SHORTCUT_GROUPS: {
     ],
   },
   {
-    pillar: SILO_PILLARS[3],
+    title: 'OCR, Code & Privacy',
+    href: '/privacy-dev',
     links: [
+      { label: 'Handwriting to Text (OCR)', href: '/tools/handwriting-to-text/' },
+      { label: 'Hindi Handwriting to Text', href: '/tools/hindi-handwriting-to-text/' },
+      { label: 'Image to Code Generator', href: '/tools/image-to-code/' },
+      { label: 'Gemini Image to Prompt', href: '/tools/gemini-image-to-prompt/' },
       { label: 'EXIF & GPS Metadata Remover', href: '/privacy-dev/remove-exif-data' },
-      { label: 'Image to Base64 Encoder', href: '/privacy-dev/image-to-base64' },
       { label: 'Base64 to Image Decoder', href: '/base64-to-image' },
-      { label: 'Image Color Picker & Palette', href: '/privacy-dev/pick-color-from-image' },
     ],
   },
 ];
@@ -400,7 +558,7 @@ export const FAQ_ITEMS = [
   {
     question: 'Are my photos actually processed without uploading to a server?',
     answer:
-      'Yes. Every tool on toolimg.online executes 100% locally inside your browser using HTML5 Canvas, Web Workers, and client-side JavaScript APIs. Your files are read directly from your device memory and never transmitted over the network—you can verify this in your browser DevTools Network tab.',
+      'Yes. All core compression, conversion, EXIF removal, cropping, HTML-to-Image, and color picking tools execute 100% locally inside your browser using HTML5 Canvas and Web APIs. AI OCR, Image-to-Code, and Image-to-Prompt tools transmit only the selected image transiently over HTTPS to generate your text output without storing files.',
   },
   {
     question: 'Which image formats are supported across compression and conversion?',
@@ -413,9 +571,9 @@ export const FAQ_ITEMS = [
       'Instead of guessing a quality slider, our client-side compressor runs a fast binary search across JPEG/WebP quality levels—and automatically scales down oversized pixel dimensions when needed—to land safely underneath your exact KB ceiling.',
   },
   {
-    question: 'Can I use toolimg.online offline or on restrictive corporate networks?',
+    question: 'Can I transcribe Hindi and English handwritten notes accurately?',
     answer:
-      'Yes. Once the page loads in your browser, all image compression, EXIF stripping, cropping, and Base64 encoding run completely offline without needing any external API calls or cloud round-trips.',
+      'Yes. Our Handwriting to Text and Hindi Handwriting to Text tools support both English cursive/print notes and Unicode Devanagari script, preserving line structure and punctuation.',
   },
 ];
 
@@ -443,4 +601,8 @@ export function resolveToolByPath(
   if (tool) return { kind: 'tool', tool };
 
   return null;
+}
+
+export function resolveCreatorToolBySlug(slug: string): CreatorToolRoute | null {
+  return CREATOR_TOOLS.find((t) => t.slug === slug) ?? null;
 }

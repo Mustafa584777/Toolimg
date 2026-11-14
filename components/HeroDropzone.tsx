@@ -144,6 +144,18 @@ export function HeroDropzone() {
     }
 
     actions.push({
+      label: 'Handwriting to Text',
+      href: '/tools/handwriting-to-text/',
+    });
+    actions.push({
+      label: 'Image to Code',
+      href: '/tools/image-to-code/',
+    });
+    actions.push({
+      label: 'Image to Prompt',
+      href: '/tools/gemini-image-to-prompt/',
+    });
+    actions.push({
       label: 'Strip EXIF Data',
       href: '/privacy-dev/remove-exif-data',
     });
@@ -154,10 +166,6 @@ export function HeroDropzone() {
     actions.push({
       label: 'Convert to WebP',
       href: '/convert/heic-to-jpg?format=webp',
-    });
-    actions.push({
-      label: 'Encode Base64',
-      href: '/privacy-dev/image-to-base64',
     });
 
     // Deduplicate by href
