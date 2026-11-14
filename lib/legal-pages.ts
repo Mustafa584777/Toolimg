@@ -103,15 +103,14 @@ export const LEGAL_PAGES: Record<LegalPageSpec['slug'], LegalPageSpec> = {
       'Contact the toolimg.online team for feature requests, bug reports, passport spec suggestions, or business inquiries.',
     updatedAt: 'November 13, 2026',
     summary:
-      'Have a question, bug report, or suggestion for a new image utility or exact-KB preset? Send us a message below or email support@toolimg.online.',
+      'Have a question, bug report, or suggestion for a new image utility or exact-KB preset? Use the contact form below to reach our team directly.',
     showContactForm: true,
     sections: [
       {
-        heading: 'Direct Support Channels',
+        heading: 'How We Can Help',
         paragraphs: [
-          'General Support & Bug Reports: support@toolimg.online',
-          'Partnership & Publisher Inquiries: hello@toolimg.online',
-          'Note: Please do not attach sensitive personal IDs or private documents to support emails.',
+          'Use the message form below for tool suggestions, technical bug reports, passport size specification updates, or business inquiries.',
+          'Note: Please do not submit sensitive personal IDs or private documents through the contact form.',
         ],
       },
     ],

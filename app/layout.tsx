@@ -40,12 +40,8 @@ export const metadata: Metadata = {
   description:
     'Fast, 100% browser-based image tools. Compress images to exact KB, convert HEIC & SVG, remove EXIF metadata, and resize for Instagram, Discord & Passports with zero uploads.',
   metadataBase: new URL('https://toolimg.online'),
-  alternates: {
-    canonical: 'https://toolimg.online',
-  },
   openGraph: {
     type: 'website',
-    url: 'https://toolimg.online',
     siteName: 'toolimg.online',
     title:
       'toolimg.online – Free Private Online Image Tools (Compress, Convert & Resize)',
@@ -118,7 +114,24 @@ export default function RootLayout({
       lang="en"
       className={`${jakarta.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
     >
-      <body suppressHydrationWarning className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A]">
+      <head>
+        <script
+          async
+          src="https://www.googletagmanager.com/gtm.js?id=G-3PK1RHDJ2S"
+        />
+        <script
+          id="gtag-init"
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());`,
+          }}
+        />
+      </head>
+      <body
+        suppressHydrationWarning
+        className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A]"
+      >
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

@@ -145,7 +145,7 @@ export const SILO_PILLARS: SiloPillar[] = [
 export const CREATOR_TOOLS: CreatorToolRoute[] = [
   {
     slug: 'handwriting-to-text',
-    href: '/tools/handwriting-to-text/',
+    href: '/tools/handwriting-to-text',
     title: 'Handwriting to Text (OCR)',
     metaTitle: 'Handwriting to Text OCR Online | toolimg.online',
     description:
@@ -155,7 +155,7 @@ export const CREATOR_TOOLS: CreatorToolRoute[] = [
   },
   {
     slug: 'hindi-handwriting-to-text',
-    href: '/tools/hindi-handwriting-to-text/',
+    href: '/tools/hindi-handwriting-to-text',
     title: 'Hindi Handwriting to Text',
     metaTitle: 'Hindi Handwriting to Text (Devanagari OCR) | toolimg.online',
     description:
@@ -165,7 +165,7 @@ export const CREATOR_TOOLS: CreatorToolRoute[] = [
   },
   {
     slug: 'image-to-code',
-    href: '/tools/image-to-code/',
+    href: '/tools/image-to-code',
     title: 'Image to Code Generator',
     metaTitle: 'Image to HTML & Tailwind CSS Code | toolimg.online',
     description:
@@ -175,7 +175,7 @@ export const CREATOR_TOOLS: CreatorToolRoute[] = [
   },
   {
     slug: 'html-to-image',
-    href: '/tools/html-to-image/',
+    href: '/tools/html-to-image',
     title: 'HTML to Image Converter',
     metaTitle: 'HTML & CSS to PNG/JPG/WebP Image | toolimg.online',
     description:
@@ -185,7 +185,7 @@ export const CREATOR_TOOLS: CreatorToolRoute[] = [
   },
   {
     slug: 'gemini-image-to-prompt',
-    href: '/tools/gemini-image-to-prompt/',
+    href: '/tools/gemini-image-to-prompt',
     title: 'Gemini Image to Prompt',
     metaTitle: 'Image to AI Prompt Generator | toolimg.online',
     description:
@@ -348,68 +348,67 @@ export const CORE_TOOLS: HubTool[] = [
     id: 'handwriting-to-text',
     title: 'Handwriting to Text (OCR)',
     benefit: 'Extract clean editable text from handwritten notes, notebooks, and whiteboards.',
-    href: '/tools/handwriting-to-text/',
+    href: '/tools/handwriting-to-text',
     category: 'ai-tools',
     iconName: 'PenLine',
     mode: 'handwriting-to-text',
     tags: [
-      { label: 'Handwritten OCR', href: '/tools/handwriting-to-text/' },
-      { label: 'Notes to TXT', href: '/tools/handwriting-to-text/' },
+      { label: 'Handwritten OCR', href: '/tools/handwriting-to-text' },
+      { label: 'Notes to TXT', href: '/tools/handwriting-to-text' },
     ],
   },
   {
     id: 'hindi-handwriting-to-text',
     title: 'Hindi Handwriting to Text',
     benefit: 'Transcribe Hindi (Devanagari) handwritten pages into Unicode text cleanly.',
-    href: '/tools/hindi-handwriting-to-text/',
+    href: '/tools/hindi-handwriting-to-text',
     category: 'ai-tools',
     iconName: 'Languages',
     mode: 'hindi-handwriting-to-text',
     tags: [
-      { label: 'Devanagari OCR', href: '/tools/hindi-handwriting-to-text/' },
-      { label: 'Hindi Unicode', href: '/tools/hindi-handwriting-to-text/' },
+      { label: 'Devanagari OCR', href: '/tools/hindi-handwriting-to-text' },
+      { label: 'Hindi Unicode', href: '/tools/hindi-handwriting-to-text' },
     ],
   },
   {
     id: 'image-to-code',
     title: 'Image to Code Generator',
     benefit: 'Convert UI screenshots and mockups into responsive HTML and Tailwind CSS.',
-    href: '/tools/image-to-code/',
+    href: '/tools/image-to-code',
     category: 'ai-tools',
     iconName: 'Code2',
     mode: 'image-to-code',
     tags: [
-      { label: 'HTML + Tailwind', href: '/tools/image-to-code/' },
-      { label: 'React JSX', href: '/tools/image-to-code/' },
+      { label: 'HTML + Tailwind', href: '/tools/image-to-code' },
+      { label: 'React JSX', href: '/tools/image-to-code' },
     ],
   },
   {
     id: 'html-to-image',
     title: 'HTML to Image Converter',
     benefit: 'Render HTML & CSS cards into crisp PNG, JPG, or WebP downloads locally.',
-    href: '/tools/html-to-image/',
+    href: '/tools/html-to-image',
     category: 'ai-tools',
     iconName: 'ImageDown',
     mode: 'html-to-image',
     tags: [
-      { label: 'HTML to PNG', href: '/tools/html-to-image/' },
-      { label: '2x Retina', href: '/tools/html-to-image/' },
+      { label: 'HTML to PNG', href: '/tools/html-to-image' },
+      { label: '2x Retina', href: '/tools/html-to-image' },
     ],
   },
   {
-    slug: 'gemini-image-to-prompt',
     id: 'gemini-image-to-prompt',
     title: 'Gemini Image to Prompt',
     benefit: 'Generate detailed Midjourney, Flux, or Stable Diffusion prompts from any photo.',
-    href: '/tools/gemini-image-to-prompt/',
+    href: '/tools/gemini-image-to-prompt',
     category: 'ai-tools',
     iconName: 'Wand2',
     mode: 'gemini-image-to-prompt',
     tags: [
-      { label: 'Image to Prompt', href: '/tools/gemini-image-to-prompt/' },
-      { label: 'JSON Describe', href: '/tools/gemini-image-to-prompt/' },
+      { label: 'Image to Prompt', href: '/tools/gemini-image-to-prompt' },
+      { label: 'JSON Describe', href: '/tools/gemini-image-to-prompt' },
     ],
-  } as HubTool,
+  },
 ];
 
 export const PROGRAMMATIC_SHORTCUTS: ShortcutRoute[] = [
@@ -502,7 +501,7 @@ export const SILO_SHORTCUT_GROUPS: {
       { label: 'HEIC to JPG Converter', href: '/convert/heic-to-jpg' },
       { label: 'HEIC to PNG Converter', href: '/heic-to-png' },
       { label: 'SVG to 4K PNG Converter', href: '/convert/svg-to-png' },
-      { label: 'HTML to Image Converter', href: '/tools/html-to-image/' },
+      { label: 'HTML to Image Converter', href: '/tools/html-to-image' },
     ],
   },
   {
@@ -520,10 +519,10 @@ export const SILO_SHORTCUT_GROUPS: {
     title: 'OCR, Code & Privacy',
     href: '/privacy-dev',
     links: [
-      { label: 'Handwriting to Text (OCR)', href: '/tools/handwriting-to-text/' },
-      { label: 'Hindi Handwriting to Text', href: '/tools/hindi-handwriting-to-text/' },
-      { label: 'Image to Code Generator', href: '/tools/image-to-code/' },
-      { label: 'Gemini Image to Prompt', href: '/tools/gemini-image-to-prompt/' },
+      { label: 'Handwriting to Text (OCR)', href: '/tools/handwriting-to-text' },
+      { label: 'Hindi Handwriting to Text', href: '/tools/hindi-handwriting-to-text' },
+      { label: 'Image to Code Generator', href: '/tools/image-to-code' },
+      { label: 'Gemini Image to Prompt', href: '/tools/gemini-image-to-prompt' },
       { label: 'EXIF & GPS Metadata Remover', href: '/privacy-dev/remove-exif-data' },
       { label: 'Base64 to Image Decoder', href: '/base64-to-image' },
     ],

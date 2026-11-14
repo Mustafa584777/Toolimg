@@ -145,15 +145,15 @@ export function HeroDropzone() {
 
     actions.push({
       label: 'Handwriting to Text',
-      href: '/tools/handwriting-to-text/',
+      href: '/tools/handwriting-to-text',
     });
     actions.push({
       label: 'Image to Code',
-      href: '/tools/image-to-code/',
+      href: '/tools/image-to-code',
     });
     actions.push({
       label: 'Image to Prompt',
-      href: '/tools/gemini-image-to-prompt/',
+      href: '/tools/gemini-image-to-prompt',
     });
     actions.push({
       label: 'Strip EXIF Data',
