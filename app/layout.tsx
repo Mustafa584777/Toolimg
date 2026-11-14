@@ -40,6 +40,11 @@ export const metadata: Metadata = {
   description:
     'Fast, 100% browser-based image tools. Compress images to exact KB, convert HEIC & SVG, remove EXIF metadata, and resize for Instagram, Discord & Passports with zero uploads.',
   metadataBase: new URL('https://toolimg.online'),
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/logo.png',
+  },
   openGraph: {
     type: 'website',
     siteName: 'toolimg.online',
@@ -47,6 +52,14 @@ export const metadata: Metadata = {
       'toolimg.online – Free Private Online Image Tools (Compress, Convert & Resize)',
     description:
       'Fast, 100% browser-based image tools. Compress images to exact KB, convert HEIC & SVG, remove EXIF metadata, and resize for Instagram, Discord & Passports with zero uploads.',
+    images: [
+      {
+        url: '/logo.png',
+        width: 512,
+        height: 512,
+        alt: 'toolimg.online logo',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -54,6 +67,7 @@ export const metadata: Metadata = {
       'toolimg.online – Free Private Online Image Tools (Compress, Convert & Resize)',
     description:
       'Fast, 100% browser-based image tools. Compress images to exact KB, convert HEIC & SVG, remove EXIF metadata, and resize with zero uploads.',
+    images: ['/logo.png'],
   },
 };
 

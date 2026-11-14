@@ -1,5 +1,6 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import { Layers, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import { CORE_TOOLS, CREATOR_TOOLS, SILO_PILLARS } from '@/lib/tools-data';
 
 const IMPORTANT_PAGES = [
@@ -22,9 +23,14 @@ export function Footer() {
               href="/"
               className="inline-flex items-center gap-2 font-[family-name:var(--font-display)] text-base font-bold tracking-tight text-[#0F172A]"
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[#2563EB] text-white">
-                <Layers className="h-4 w-4" aria-hidden="true" />
-              </span>
+              <Image
+                src="/logo.png"
+                alt="toolimg.online logo"
+                width={28}
+                height={28}
+                referrerPolicy="no-referrer"
+                className="h-7 w-7 rounded-md object-contain"
+              />
               <span>toolimg.online</span>
             </Link>
             <p className="mt-3 text-xs leading-relaxed text-[#475569]">
