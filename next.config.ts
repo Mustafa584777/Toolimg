@@ -2,11 +2,6 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  compress: true,
-  experimental: {
-    inlineCss: true,
-    optimizePackageImports: ['lucide-react'],
-  },
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -15,7 +10,6 @@ const nextConfig: NextConfig = {
   },
   // Allow access to remote image placeholder.
   images: {
-    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',

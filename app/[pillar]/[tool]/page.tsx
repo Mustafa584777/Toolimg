@@ -8,7 +8,7 @@ interface SiloToolPageProps {
 }
 
 export function generateStaticParams() {
-  return CORE_TOOLS.filter((t) => t.category !== 'ai-tools').map((t) => {
+  return CORE_TOOLS.map((t) => {
     const [, pillar, tool] = t.href.split('/');
     return { pillar, tool };
   });
@@ -23,17 +23,10 @@ export async function generateMetadata({
     return { title: 'Tool Not Found | toolimg.online' };
   }
 
-  const canonicalUrl = `https://toolimg.online${resolved.tool.href}`;
-
   return {
     title: `${resolved.tool.title} — Free Private Online Tool | toolimg.online`,
     description: resolved.tool.benefit,
-    alternates: { canonical: canonicalUrl },
-    openGraph: {
-      url: canonicalUrl,
-      title: `${resolved.tool.title} — Free Private Online Tool | toolimg.online`,
-      description: resolved.tool.benefit,
-    },
+    alternates: { canonical: `https://toolimg.online${resolved.tool.href}` },
   };
 }
 
@@ -46,26 +39,12 @@ export default async function SiloToolPage({ params }: SiloToolPageProps) {
   }
 
   return (
-    <>
-      <ToolWorkspace
-        title={resolved.tool.title}
-        description={resolved.tool.benefit}
-        category={resolved.tool.category}
-        mode={resolved.tool.mode}
-        preset={resolved.tool.defaultPreset}
-      />
-      <section className="border-t border-[#E2E8F0] bg-white py-10">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-[#0F172A]">
-            How {resolved.tool.title} Works Privately
-          </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#475569]">
-            {resolved.tool.benefit} Every step executes directly inside your
-            browser using HTML5 Canvas and Web APIs—your image never leaves your
-            device.
-          </p>
-        </div>
-      </section>
-    </>
+    <ToolWorkspace
+      title={resolved.tool.title}
+      description={resolved.tool.benefit}
+      category={resolved.tool.category}
+      mode={resolved.tool.mode}
+      preset={resolved.tool.defaultPreset}
+    />
   );
 }

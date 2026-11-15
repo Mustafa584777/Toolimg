@@ -1,9 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Search, ShieldCheck, X } from 'lucide-react';
+import { Layers, Menu, Search, ShieldCheck, X } from 'lucide-react';
 import { useState } from 'react';
 import { SILO_PILLARS } from '@/lib/tools-data';
 import { useImageSession } from '@/components/ImageSessionProvider';
@@ -21,15 +20,9 @@ export function Navbar() {
           href="/"
           className="flex shrink-0 items-center gap-2.5 whitespace-nowrap text-[#0F172A] transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 rounded-md"
         >
-          <Image
-            src="/logo.png"
-            alt="toolimg.online logo"
-            width={32}
-            height={32}
-            priority
-            referrerPolicy="no-referrer"
-            className="h-8 w-8 rounded-lg object-contain"
-          />
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#2563EB] text-white shadow-xs">
+            <Layers className="h-4 w-4" aria-hidden="true" />
+          </span>
           <span className="font-[family-name:var(--font-display)] text-base font-bold tracking-tight">
             toolimg.online
           </span>

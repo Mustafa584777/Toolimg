@@ -67,14 +67,14 @@ export function TrustAndShortcuts() {
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {SILO_SHORTCUT_GROUPS.map((group) => (
               <div
-                key={group.href}
+                key={group.pillar.id}
                 className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-5"
               >
                 <Link
-                  href={group.href}
+                  href={group.pillar.href}
                   className="inline-flex items-center gap-1.5 font-[family-name:var(--font-display)] text-sm font-semibold text-[#0F172A] hover:text-[#2563EB]"
                 >
-                  <span>{group.title}</span>
+                  <span>{group.pillar.tabLabel}</span>
                   <ArrowRight className="h-3.5 w-3.5 text-[#64748B]" aria-hidden="true" />
                 </Link>
 

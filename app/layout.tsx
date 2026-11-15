@@ -1,16 +1,24 @@
 import type { Metadata, Viewport } from 'next';
-import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+import { DM_Sans, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { FAQ_ITEMS } from '@/lib/tools-data';
 import { ImageSessionProvider } from '@/components/ImageSessionProvider';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
-import { DeferredOverlays } from '@/components/DeferredOverlays';
+import { CommandSearchModal } from '@/components/CommandSearchModal';
+import { InfoModal } from '@/components/InfoModal';
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['500', '600', '700'],
   variable: '--font-jakarta',
+  display: 'swap',
+});
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-dm-sans',
   display: 'swap',
 });
 
@@ -32,26 +40,17 @@ export const metadata: Metadata = {
   description:
     'Fast, 100% browser-based image tools. Compress images to exact KB, convert HEIC & SVG, remove EXIF metadata, and resize for Instagram, Discord & Passports with zero uploads.',
   metadataBase: new URL('https://toolimg.online'),
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/logo.png',
+  alternates: {
+    canonical: 'https://toolimg.online',
   },
   openGraph: {
     type: 'website',
+    url: 'https://toolimg.online',
     siteName: 'toolimg.online',
     title:
       'toolimg.online – Free Private Online Image Tools (Compress, Convert & Resize)',
     description:
       'Fast, 100% browser-based image tools. Compress images to exact KB, convert HEIC & SVG, remove EXIF metadata, and resize for Instagram, Discord & Passports with zero uploads.',
-    images: [
-      {
-        url: '/logo.png',
-        width: 512,
-        height: 512,
-        alt: 'toolimg.online logo',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -59,7 +58,6 @@ export const metadata: Metadata = {
       'toolimg.online – Free Private Online Image Tools (Compress, Convert & Resize)',
     description:
       'Fast, 100% browser-based image tools. Compress images to exact KB, convert HEIC & SVG, remove EXIF metadata, and resize with zero uploads.',
-    images: ['/logo.png'],
   },
 };
 
@@ -110,31 +108,6 @@ const structuredData = {
   ],
 };
 
-const gtagLoaderScript = `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-(function(){
-  var loaded = false;
-  function loadGtm(){
-    if(loaded) return;
-    loaded = true;
-    var s = document.createElement('script');
-    s.async = true;
-    s.src = 'https://www.googletagmanager.com/gtm.js?id=G-3PK1RHDJ2S';
-    document.head.appendChild(s);
-  }
-  ['pointerdown','keydown','scroll','touchstart'].forEach(function(evt){
-    window.addEventListener(evt, loadGtm, {once:true, passive:true});
-  });
-  window.addEventListener('load', function(){
-    if('requestIdleCallback' in window){
-      window.requestIdleCallback(loadGtm, {timeout: 3500});
-    } else {
-      setTimeout(loadGtm, 2500);
-    }
-  }, {once:true});
-})();`;
-
 export default function RootLayout({
   children,
 }: {
@@ -143,28 +116,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jakarta.variable} ${jetbrainsMono.variable}`}
+      className={`${jakarta.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
     >
-      <head>
-        <link
-          rel="preconnect"
-          href="https://www.googletagmanager.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preconnect"
-          href="https://www.google-analytics.com"
-          crossOrigin="anonymous"
-        />
-        <script
-          id="gtag-init"
-          dangerouslySetInnerHTML={{ __html: gtagLoaderScript }}
-        />
-      </head>
-      <body
-        suppressHydrationWarning
-        className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A]"
-      >
+      <body suppressHydrationWarning className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A]">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -173,7 +127,8 @@ export default function RootLayout({
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />
-          <DeferredOverlays />
+          <CommandSearchModal />
+          <InfoModal />
         </ImageSessionProvider>
       </body>
     </html>
