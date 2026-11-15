@@ -34,6 +34,16 @@ const nextConfig: NextConfig = {
       { source: '/privacy-policy.html', destination: '/privacy-policy', permanent: true },
       { source: '/refund-policy.html', destination: '/refund-policy', permanent: true },
       { source: '/terms.html', destination: '/terms', permanent: true },
+      {
+        source: '/tools/gemini-image-to-prompt-2',
+        destination: '/tools/gemini-image-to-prompt',
+        permanent: true,
+      },
+      {
+        source: '/tools/gemini-image-to-prompt-2/',
+        destination: '/tools/gemini-image-to-prompt',
+        permanent: true,
+      },
     ];
   },
   transpilePackages: ['motion'],
