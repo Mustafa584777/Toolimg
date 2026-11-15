@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Disallow: /de/tools/image-to-code/
+Disallow: /ar/tools/hindi-handwriting-to-text/
+Disallow: /es/tools/hindi-handwriting-to-text/
+Disallow: /de/tools/html-to-image/
+Disallow: /ar/tools/handwriting-to-text/
+Disallow: /es/tools/image-to-code/
+Disallow: /ar/tools/image-to-code/
+Disallow: /ru/
+Disallow: /fr/
+Disallow: /es/tools/handwriting-to-text/
+Disallow: /en/
+Disallow: /de/tools/handwriting-to-text/
+Disallow: /de/tools/hindi-handwriting-to-text/
+Disallow: /ar/tools/html-to-image/
+Disallow: /ar/
+Disallow: /ru/tools/image-to-code/
+Disallow: /fr/pricing/
+Disallow: /pricing/
+Disallow: /api/image-to-code
+
+Sitemap: https://toolimg.online/sitemap.xml
