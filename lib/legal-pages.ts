@@ -1,17 +1,11 @@
 export interface LegalPageSpec {
   slug:
     | 'privacy-policy'
-    | 'privacy-policy.html'
     | 'terms'
-    | 'terms.html'
     | 'contact'
-    | 'contact.html'
     | 'refund-policy'
-    | 'refund-policy.html'
     | 'disclaimer'
-    | 'disclaimer.html'
-    | 'about'
-    | 'about.html';
+    | 'about';
   title: string;
   metaTitle: string;
   metaDescription: string;
@@ -216,17 +210,11 @@ const aboutSpec: LegalPageSpec = {
   ],
 };
 
-export const LEGAL_PAGES: Record<string, LegalPageSpec> = {
+export const LEGAL_PAGES: Record<LegalPageSpec['slug'], LegalPageSpec> = {
   'privacy-policy': privacyPolicySpec,
-  'privacy-policy.html': { ...privacyPolicySpec, slug: 'privacy-policy.html' },
   terms: termsSpec,
-  'terms.html': { ...termsSpec, slug: 'terms.html' },
   contact: contactSpec,
-  'contact.html': { ...contactSpec, slug: 'contact.html' },
   'refund-policy': refundPolicySpec,
-  'refund-policy.html': { ...refundPolicySpec, slug: 'refund-policy.html' },
   disclaimer: disclaimerSpec,
-  'disclaimer.html': { ...disclaimerSpec, slug: 'disclaimer.html' },
   about: aboutSpec,
-  'about.html': { ...aboutSpec, slug: 'about.html' },
 };
