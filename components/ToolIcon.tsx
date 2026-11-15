@@ -1,14 +1,19 @@
 import {
   Binary,
   CircleDot,
+  Code2,
   FileCode2,
   Gauge,
   Grid3x3,
+  ImageDown,
+  Languages,
+  PenLine,
   Pipette,
   RefreshCw,
   ShieldOff,
   Smile,
   UserSquare2,
+  Wand2,
 } from 'lucide-react';
 import type { HubTool } from '@/lib/tools-data';
 
@@ -39,5 +44,15 @@ export function ToolIcon({ name, className = 'h-5 w-5' }: ToolIconProps) {
       return <CircleDot className={className} aria-hidden="true" />;
     case 'Pipette':
       return <Pipette className={className} aria-hidden="true" />;
+    case 'PenLine':
+      return <PenLine className={className} aria-hidden="true" />;
+    case 'Languages':
+      return <Languages className={className} aria-hidden="true" />;
+    case 'Code2':
+      return <Code2 className={className} aria-hidden="true" />;
+    case 'ImageDown':
+      return <ImageDown className={className} aria-hidden="true" />;
+    case 'Wand2':
+      return <Wand2 className={className} aria-hidden="true" />;
   }
 }

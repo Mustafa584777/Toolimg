@@ -24,6 +24,11 @@ export function ToolDirectory() {
         label: p.tabLabel,
         count: CORE_TOOLS.filter((t) => t.category === p.id).length,
       })),
+      {
+        id: 'ai-tools',
+        label: 'OCR, Code & Prompts',
+        count: CORE_TOOLS.filter((t) => t.category === 'ai-tools').length,
+      },
     ],
     []
   );

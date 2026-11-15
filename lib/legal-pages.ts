@@ -1,11 +1,11 @@
 export interface LegalPageSpec {
   slug:
-    | 'privacy-policy.html'
-    | 'terms.html'
-    | 'contact.html'
-    | 'refund-policy.html'
-    | 'disclaimer.html'
-    | 'about.html';
+    | 'privacy-policy'
+    | 'terms'
+    | 'contact'
+    | 'refund-policy'
+    | 'disclaimer'
+    | 'about';
   title: string;
   metaTitle: string;
   metaDescription: string;
@@ -20,8 +20,8 @@ export interface LegalPageSpec {
 }
 
 export const LEGAL_PAGES: Record<LegalPageSpec['slug'], LegalPageSpec> = {
-  'privacy-policy.html': {
-    slug: 'privacy-policy.html',
+  'privacy-policy': {
+    slug: 'privacy-policy',
     title: 'Privacy Policy',
     metaTitle: 'Privacy Policy | toolimg.online',
     metaDescription:
@@ -58,8 +58,8 @@ export const LEGAL_PAGES: Record<LegalPageSpec['slug'], LegalPageSpec> = {
       },
     ],
   },
-  'terms.html': {
-    slug: 'terms.html',
+  terms: {
+    slug: 'terms',
     title: 'Terms & Conditions',
     metaTitle: 'Terms & Conditions | toolimg.online',
     metaDescription:
@@ -95,8 +95,8 @@ export const LEGAL_PAGES: Record<LegalPageSpec['slug'], LegalPageSpec> = {
       },
     ],
   },
-  'contact.html': {
-    slug: 'contact.html',
+  contact: {
+    slug: 'contact',
     title: 'Contact Us',
     metaTitle: 'Contact Us | toolimg.online',
     metaDescription:
@@ -115,8 +115,8 @@ export const LEGAL_PAGES: Record<LegalPageSpec['slug'], LegalPageSpec> = {
       },
     ],
   },
-  'refund-policy.html': {
-    slug: 'refund-policy.html',
+  'refund-policy': {
+    slug: 'refund-policy',
     title: 'Refund Policy',
     metaTitle: 'Refund Policy | toolimg.online',
     metaDescription:
@@ -145,8 +145,8 @@ export const LEGAL_PAGES: Record<LegalPageSpec['slug'], LegalPageSpec> = {
       },
     ],
   },
-  'disclaimer.html': {
-    slug: 'disclaimer.html',
+  disclaimer: {
+    slug: 'disclaimer',
     title: 'Disclaimer',
     metaTitle: 'Disclaimer | toolimg.online',
     metaDescription:
@@ -176,8 +176,8 @@ export const LEGAL_PAGES: Record<LegalPageSpec['slug'], LegalPageSpec> = {
       },
     ],
   },
-  'about.html': {
-    slug: 'about.html',
+  about: {
+    slug: 'about',
     title: 'About toolimg.online',
     metaTitle: 'About Us | toolimg.online',
     metaDescription:

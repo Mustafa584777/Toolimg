@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { motion } from 'motion/react';
 import {
   ArrowRight,
   FileImage,
@@ -12,18 +11,20 @@ import {
   X,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  createSampleImageFile,
-  formatBytes,
-  inspectImageFile,
-  type InspectedImage,
-} from '@/lib/image-processor';
+import type { InspectedImage } from '@/lib/image-processor';
 import { useImageSession } from '@/components/ImageSessionProvider';
 
 interface QuickAction {
   label: string;
   href: string;
   primary?: boolean;
+}
+
+function formatReadableBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb.toFixed(kb >= 100 ? 0 : 1)} KB`;
+  return `${(kb / 1024).toFixed(2)} MB`;
 }
 
 export function HeroDropzone() {
@@ -48,6 +49,7 @@ export function HeroDropzone() {
     setErrorMsg(null);
     setIsInspecting(true);
     try {
+      const { inspectImageFile } = await import('@/lib/image-processor');
       const result = await inspectImageFile(file);
       setInspected((prev) => {
         if (prev?.previewUrl) URL.revokeObjectURL(prev.previewUrl);
@@ -84,6 +86,7 @@ export function HeroDropzone() {
     setIsInspecting(true);
     setErrorMsg(null);
     try {
+      const { createSampleImageFile } = await import('@/lib/image-processor');
       const sampleFile = await createSampleImageFile();
       await handleFile(sampleFile);
     } catch {
@@ -144,6 +147,18 @@ export function HeroDropzone() {
     }
 
     actions.push({
+      label: 'Handwriting to Text',
+      href: '/tools/handwriting-to-text',
+    });
+    actions.push({
+      label: 'Image to Code',
+      href: '/tools/image-to-code',
+    });
+    actions.push({
+      label: 'Image to Prompt',
+      href: '/tools/gemini-image-to-prompt',
+    });
+    actions.push({
       label: 'Strip EXIF Data',
       href: '/privacy-dev/remove-exif-data',
     });
@@ -155,12 +170,7 @@ export function HeroDropzone() {
       label: 'Convert to WebP',
       href: '/convert/heic-to-jpg?format=webp',
     });
-    actions.push({
-      label: 'Encode Base64',
-      href: '/privacy-dev/image-to-base64',
-    });
 
-    // Deduplicate by href
     const seen = new Set<string>();
     return actions.filter((a) => {
       if (seen.has(a.href)) return false;
@@ -173,29 +183,18 @@ export function HeroDropzone() {
     <section className="relative border-b border-[#E2E8F0] bg-[#F8FAFC] pt-10 pb-14 sm:pt-14 sm:pb-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <h1 className="font-[family-name:var(--font-display)] text-[clamp(2.15rem,4.2vw,3.35rem)] font-bold leading-[1.1] tracking-tight text-[#0F172A] text-balance">
-              Private, Instant Image Tools — Right in Your Browser
-            </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#475569] sm:text-lg">
-              Compress to exact KB, convert HEIC/SVG, strip EXIF metadata, and
-              resize for social media. No server uploads, no file limits, 100%
-              free forever.
-            </p>
-          </motion.div>
+          <h1 className="font-[family-name:var(--font-display)] text-[clamp(2.15rem,4.2vw,3.35rem)] font-bold leading-[1.1] tracking-tight text-[#0F172A] text-balance">
+            Private, Instant Image Tools — Right in Your Browser
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#475569] sm:text-lg">
+            Compress to exact KB, convert HEIC/SVG, strip EXIF metadata, and
+            resize for social media. No server uploads, no file limits, 100%
+            free forever.
+          </p>
         </div>
 
         {/* Interactive Quick-Start Smart Dropzone */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-8 max-w-4xl"
-        >
+        <div className="mx-auto mt-8 max-w-4xl">
           <div
             onDragOver={(e) => {
               e.preventDefault();
@@ -203,7 +202,7 @@ export function HeroDropzone() {
             }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
-            className={`rounded-2xl border bg-white p-5 transition-all sm:p-7 ${
+            className={`rounded-2xl border bg-white p-5 transition-colors sm:p-7 ${
               isDragging
                 ? 'border-[#2563EB] bg-[#EFF6FF]/60 ring-4 ring-[#2563EB]/10'
                 : 'border-[#E2E8F0] shadow-xs hover:border-[#CBD5E1]'
@@ -275,7 +274,6 @@ export function HeroDropzone() {
             ) : (
               /* Inspected Image State + 1-Click Quick Action Pills */
               <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-                {/* Thumbnail Preview */}
                 <div className="relative flex h-36 w-full shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] sm:h-40 sm:w-48">
                   {inspected.previewUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -295,7 +293,6 @@ export function HeroDropzone() {
                   )}
                 </div>
 
-                {/* Metadata + Quick 1-Click Action Pills */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -307,7 +304,7 @@ export function HeroDropzone() {
                           {inspected.formatLabel}
                         </span>
                         <span aria-hidden="true">·</span>
-                        <span>{formatBytes(inspected.sizeBytes)}</span>
+                        <span>{formatReadableBytes(inspected.sizeBytes)}</span>
                         {inspected.width && inspected.height && (
                           <>
                             <span aria-hidden="true">·</span>
@@ -370,7 +367,7 @@ export function HeroDropzone() {
               </div>
             )}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

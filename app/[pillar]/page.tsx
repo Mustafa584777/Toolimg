@@ -32,19 +32,31 @@ export async function generateMetadata({
   }
 
   if (resolved.kind === 'pillar' && resolved.pillar) {
+    const canonicalUrl = `https://toolimg.online${resolved.pillar.href}`;
+    const title = `${resolved.pillar.headline} | toolimg.online`;
     return {
-      title: `${resolved.pillar.headline} | toolimg.online`,
+      title,
       description: resolved.pillar.description,
-      alternates: { canonical: `https://toolimg.online${resolved.pillar.href}` },
+      alternates: { canonical: canonicalUrl },
+      openGraph: {
+        url: canonicalUrl,
+        title,
+        description: resolved.pillar.description,
+      },
     };
   }
 
   if (resolved.kind === 'shortcut' && resolved.shortcut) {
+    const canonicalUrl = `https://toolimg.online${resolved.shortcut.href}`;
+    const title = `${resolved.shortcut.title} — Free Private Online Tool | toolimg.online`;
     return {
-      title: `${resolved.shortcut.title} — Free Private Online Tool | toolimg.online`,
+      title,
       description: resolved.shortcut.description,
-      alternates: {
-        canonical: `https://toolimg.online${resolved.shortcut.href}`,
+      alternates: { canonical: canonicalUrl },
+      openGraph: {
+        url: canonicalUrl,
+        title,
+        description: resolved.shortcut.description,
       },
     };
   }

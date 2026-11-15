@@ -53,7 +53,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     addEntry(shortcut.href, 'weekly', 0.8);
   }
 
-  // 5. Important Policy & Info Pages (.html)
+  // 5. Important Policy & Info Pages
   for (const slug of Object.keys(LEGAL_PAGES)) {
     addEntry(`/${slug}`, 'monthly', 0.5);
   }
