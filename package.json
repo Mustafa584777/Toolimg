@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "rm -rf .next && next build",
+    "build": "rm -rf .next app/about.html app/contact.html app/disclaimer.html app/privacy-policy.html app/refund-policy.html app/terms.html && next build",
     "start": "next start",
     "lint": "eslint .",
     "clean": "next clean"
