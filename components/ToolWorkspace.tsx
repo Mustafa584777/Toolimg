@@ -44,6 +44,22 @@ interface ToolWorkspaceProps {
   preset?: HubTool['defaultPreset'];
 }
 
+function renderSplitHeadline(title: string) {
+  const words = title.trim().split(/\s+/);
+  if (words.length <= 1) {
+    return <span className="text-orange-gradient">{title}</span>;
+  }
+  const splitAt = Math.max(1, Math.ceil(words.length / 2));
+  const lead = words.slice(0, splitAt).join(' ');
+  const accent = words.slice(splitAt).join(' ');
+  return (
+    <>
+      <span>{lead} </span>
+      <span className="text-orange-gradient">{accent}</span>
+    </>
+  );
+}
+
 export function ToolWorkspace({
   title,
   description,
@@ -55,6 +71,7 @@ export function ToolWorkspace({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [sourceImage, setSourceImage] = useState<InspectedImage | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -152,6 +169,25 @@ export function ToolWorkspace({
     };
   }, [pendingFile, setPendingFile, loadFileIntoWorkspace]);
 
+  // Support Ctrl+V paste in workspace
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          const file = item.getAsFile();
+          if (file) {
+            void loadFileIntoWorkspace(file);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener('paste', onPaste);
+    return () => window.removeEventListener('paste', onPaste);
+  }, [loadFileIntoWorkspace]);
+
   // Paint image onto interactive eyedropper canvas when in color-picker mode
   useEffect(() => {
     if (mode !== 'color-picker' || !sourceImage?.previewUrl || !colorCanvasRef.current) {
@@ -176,6 +212,13 @@ export function ToolWorkspace({
     const f = e.target.files?.[0];
     if (f) void loadFileIntoWorkspace(f);
     e.target.value = '';
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const f = e.dataTransfer.files?.[0];
+    if (f) void loadFileIntoWorkspace(f);
   };
 
   const handleTrySample = async () => {
@@ -234,7 +277,7 @@ export function ToolWorkspace({
           width: res.width,
           height: res.height,
           ext: fmt === 'image/webp' ? 'webp' : 'jpg',
-          note: `Quality ${res.qualityUsed}% · Target ≤ ${targetKb}KB`,
+          note: `Quality ${res.qualityUsed}% · Target <= ${targetKb}KB`,
         });
       } else if (mode === 'convert-format' && sourceImage) {
         const res = await convertImageFormat(sourceImage.file, outputFormat);
@@ -306,8 +349,8 @@ export function ToolWorkspace({
           ext: res.blob.type === 'image/webp' ? 'webp' : 'png',
           note:
             discordMode === 'emoji'
-              ? 'Sized 128×128 under 256KB Discord limit'
-              : 'Sized 960×540 Server Banner',
+              ? 'Sized 128x128 under 256KB Discord limit'
+              : 'Sized 960x540 Server Banner',
         });
       } else if (mode === 'passport-photo' && sourceImage) {
         const res = await generatePassportPhoto(sourceImage.file, passportPreset);
@@ -320,10 +363,10 @@ export function ToolWorkspace({
           ext: 'jpg',
           note:
             passportPreset === 'print-4x6'
-              ? '300 DPI printable 4×6" sheet (6 photos)'
+              ? '300 DPI printable 4x6" sheet (6 photos)'
               : passportPreset === 'uk-35x45'
-              ? '35×45mm biometric ratio'
-              : 'US 2×2" (600×600 px) biometric ratio',
+              ? '35x45mm biometric ratio'
+              : 'US 2x2" (600x600 px) biometric ratio',
         });
       } else if (mode === 'base64' && base64Direction === 'decode') {
         const trimmed = base64Text.trim();
@@ -362,266 +405,175 @@ export function ToolWorkspace({
   };
 
   return (
-    <div className="bg-[#F8FAFC] py-8 sm:py-12">
+    <div className="hero-orange-glow py-8 sm:py-12">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        {/* Breadcrumb Navigation */}
-        <nav
-          aria-label="Breadcrumb"
-          className="flex flex-wrap items-center gap-2 text-xs text-[#475569]"
-        >
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1 font-medium text-[#0F172A] hover:text-[#2563EB]"
+        {/* Centered Breadcrumb + Privacy Pill */}
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex flex-wrap items-center gap-2 text-xs text-[#6B7280]"
           >
-            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>All Tools</span>
-          </Link>
-          {pillar && (
-            <>
-              <span aria-hidden="true">/</span>
-              <Link href={pillar.href} className="hover:text-[#2563EB]">
-                {pillar.tabLabel}
-              </Link>
-            </>
-          )}
-          <span aria-hidden="true">/</span>
-          <span className="text-[#64748B]">{title}</span>
-        </nav>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1 font-medium text-[#111827] hover:text-[#EA580C]"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>All Tools</span>
+            </Link>
+            {pillar && (
+              <>
+                <span aria-hidden="true">/</span>
+                <Link href={pillar.href} className="hover:text-[#EA580C]">
+                  {pillar.tabLabel}
+                </Link>
+              </>
+            )}
+            <span aria-hidden="true">/</span>
+            <span className="text-[#9CA3AF]">{title}</span>
+          </nav>
 
-        {/* Tool Header */}
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
-              {title}
-            </h1>
-            <p className="mt-1.5 max-w-2xl text-sm text-[#475569] sm:text-base">
-              {description}
-            </p>
-          </div>
-          <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[#ECFDF5] px-3 py-1 text-xs font-medium text-[#059669]">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] px-3 py-1 text-xs font-medium text-[#059669]">
             <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Processed Locally</span>
           </span>
         </div>
 
-        {/* Main Interactive Tool Card */}
-        <div className="mt-6 rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-xs sm:p-7">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*,.heic,.heif,.svg"
-            onChange={handleFileInput}
-            className="sr-only"
-          />
+        {/* Centered Tool Header */}
+        <div className="mx-auto mt-5 max-w-3xl text-center">
+          <h1 className="font-[family-name:var(--font-display)] text-3xl font-extrabold tracking-tight text-[#111827] sm:text-4xl">
+            {renderSplitHeadline(title)}
+          </h1>
+          <p className="mx-auto mt-2.5 max-w-2xl text-sm leading-relaxed text-[#6B7280] sm:text-base">
+            {description}
+          </p>
+        </div>
 
-          {/* Base64 Mode Switcher */}
-          {mode === 'base64' && (
-            <div className="mb-5 flex items-center gap-2 border-b border-[#E2E8F0] pb-4">
-              <button
-                type="button"
-                onClick={() => {
-                  setBase64Direction('encode');
-                  resetOutputs();
-                }}
-                className={`rounded-lg px-3.5 py-2 text-xs font-medium transition-colors ${
-                  base64Direction === 'encode'
-                    ? 'bg-[#0F172A] text-white'
-                    : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
-                }`}
-              >
-                Image to Base64 Encoder
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setBase64Direction('decode');
-                  resetOutputs();
-                }}
-                className={`rounded-lg px-3.5 py-2 text-xs font-medium transition-colors ${
-                  base64Direction === 'decode'
-                    ? 'bg-[#0F172A] text-white'
-                    : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
-                }`}
-              >
-                Base64 to Image Decoder
-              </button>
-            </div>
-          )}
-
-          {/* Upload / Source Bar */}
-          {!(mode === 'base64' && base64Direction === 'decode') && (
-            <div className="flex flex-col gap-4 rounded-xl border border-dashed border-[#CBD5E1] bg-[#F8FAFC] p-5 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#E2E8F0] bg-white text-[#2563EB]">
-                  <UploadCloud className="h-5 w-5" aria-hidden="true" />
-                </div>
-                <div className="min-w-0">
-                  {sourceImage ? (
-                    <>
-                      <p className="truncate text-sm font-semibold text-[#0F172A]">
-                        {sourceImage.name}
-                      </p>
-                      <p className="font-mono text-xs text-[#475569] tabular-nums">
-                        {sourceImage.formatLabel} · {formatBytes(sourceImage.sizeBytes)}
-                        {sourceImage.width && sourceImage.height
-                          ? ` · ${sourceImage.width} × ${sourceImage.height} px`
-                          : ''}
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-sm font-semibold text-[#0F172A]">
-                        Select an image from your device
-                      </p>
-                      <p className="text-xs text-[#475569]">
-                        JPG, PNG, WebP, SVG, or HEIC · Never leaves your browser
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex min-h-[40px] items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-medium text-white hover:bg-[#1D4ED8]"
-                >
-                  <ImagePlus className="h-4 w-4" aria-hidden="true" />
-                  <span>{sourceImage ? 'Change Image' : 'Select Image'}</span>
-                </button>
-                {!sourceImage && (
-                  <button
-                    type="button"
-                    onClick={handleTrySample}
-                    className="inline-flex min-h-[40px] items-center gap-1.5 rounded-lg border border-[#E2E8F0] bg-white px-3.5 py-2 text-xs font-medium text-[#0F172A] hover:bg-[#F8FAFC]"
-                  >
-                    <Sparkles className="h-3.5 w-3.5 text-[#2563EB]" aria-hidden="true" />
-                    <span>Try Sample</span>
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Tool-Specific Controls */}
-          <div className="mt-5 flex flex-wrap items-end justify-between gap-4">
+        {/* Horizontal Format / Preset Bar Above Workspace */}
+        {mode !== 'exif-remove' && mode !== 'circle-crop' && mode !== 'color-picker' && (
+          <div className="mx-auto mt-6 flex max-w-4xl flex-wrap items-center justify-center gap-2">
             {mode === 'compress-kb' && (
-              <div className="flex flex-wrap items-center gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-[#475569]">
-                    Target Max File Size (KB)
-                  </label>
-                  <div className="mt-1.5 flex items-center gap-1.5">
-                    {[20, 50, 100, 200].map((kb) => (
-                      <button
-                        key={kb}
-                        type="button"
-                        onClick={() => setTargetKb(kb)}
-                        className={`rounded-md px-3 py-1.5 font-mono text-xs font-medium tabular-nums ${
-                          targetKb === kb
-                            ? 'bg-[#0F172A] text-white'
-                            : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:bg-white'
-                        }`}
-                      >
-                        {kb}KB
-                      </button>
-                    ))}
-                    <input
-                      type="number"
-                      min={5}
-                      max={5000}
-                      value={targetKb}
-                      onChange={(e) => setTargetKb(Math.max(5, Number(e.target.value) || 50))}
-                      aria-label="Custom KB target"
-                      className="h-8 w-20 rounded-md border border-[#E2E8F0] px-2 font-mono text-xs text-[#0F172A] tabular-nums"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-[#475569]">
-                    Output Format
-                  </label>
-                  <div className="mt-1.5 flex gap-1.5">
-                    {(['image/jpeg', 'image/webp'] as const).map((fmt) => (
-                      <button
-                        key={fmt}
-                        type="button"
-                        onClick={() => setOutputFormat(fmt)}
-                        className={`rounded-md px-3 py-1.5 text-xs font-medium ${
-                          outputFormat === fmt
-                            ? 'bg-[#0F172A] text-white'
-                            : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
-                        }`}
-                      >
-                        {fmt === 'image/jpeg' ? 'JPG' : 'WebP'}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {mode === 'convert-format' && (
-              <div>
-                <label className="block text-xs font-medium text-[#475569]">
-                  Convert To
-                </label>
-                <div className="mt-1.5 flex gap-1.5">
-                  {(['image/jpeg', 'image/png', 'image/webp'] as const).map((fmt) => (
+              <>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                  Target KB:
+                </span>
+                {[20, 50, 100, 200].map((kb) => {
+                  const active = targetKb === kb;
+                  return (
+                    <button
+                      key={kb}
+                      type="button"
+                      onClick={() => setTargetKb(kb)}
+                      className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 font-mono text-xs font-semibold tabular-nums transition-all ${
+                        active
+                          ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C] shadow-[0_1px_3px_rgba(249,115,22,0.15)]'
+                          : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
+                      }`}
+                    >
+                      {active && <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />}
+                      <span>{kb}KB</span>
+                    </button>
+                  );
+                })}
+                <input
+                  type="number"
+                  min={5}
+                  max={5000}
+                  value={targetKb}
+                  onChange={(e) => setTargetKb(Math.max(5, Number(e.target.value) || 50))}
+                  aria-label="Custom KB target"
+                  className="h-8 w-20 rounded-xl border border-[#E5E7EB] bg-white px-2.5 font-mono text-xs text-[#111827] tabular-nums focus:border-[#F97316] focus:outline-none"
+                />
+                <span className="ml-1 text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                  Format:
+                </span>
+                {(['image/jpeg', 'image/webp'] as const).map((fmt) => {
+                  const active = outputFormat === fmt;
+                  return (
                     <button
                       key={fmt}
                       type="button"
                       onClick={() => setOutputFormat(fmt)}
-                      className={`rounded-md px-3.5 py-1.5 text-xs font-medium ${
-                        outputFormat === fmt
-                          ? 'bg-[#0F172A] text-white'
-                          : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
+                      className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all ${
+                        active
+                          ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                          : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
                       }`}
                     >
-                      {fmt === 'image/jpeg'
-                        ? 'JPG'
-                        : fmt === 'image/png'
-                        ? 'PNG'
-                        : 'WebP'}
+                      {active && <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />}
+                      <span>{fmt === 'image/jpeg' ? 'JPG' : 'WebP'}</span>
                     </button>
-                  ))}
-                </div>
-              </div>
+                  );
+                })}
+              </>
+            )}
+
+            {mode === 'convert-format' && (
+              <>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                  Output Format:
+                </span>
+                {(['image/jpeg', 'image/png', 'image/webp'] as const).map((fmt) => {
+                  const active = outputFormat === fmt;
+                  return (
+                    <button
+                      key={fmt}
+                      type="button"
+                      onClick={() => setOutputFormat(fmt)}
+                      className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                        active
+                          ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                          : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
+                      }`}
+                    >
+                      {active && <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />}
+                      <span>
+                        {fmt === 'image/jpeg'
+                          ? 'JPG'
+                          : fmt === 'image/png'
+                          ? 'PNG'
+                          : 'WebP'}
+                      </span>
+                    </button>
+                  );
+                })}
+              </>
             )}
 
             {mode === 'svg-to-png' && (
-              <div className="flex flex-wrap gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-[#475569]">
-                    Export Width
-                  </label>
-                  <div className="mt-1.5 flex gap-1.5">
-                    {[1024, 2048, 3840].map((w) => (
-                      <button
-                        key={w}
-                        type="button"
-                        onClick={() => setSvgWidth(w)}
-                        className={`rounded-md px-3 py-1.5 font-mono text-xs font-medium tabular-nums ${
-                          svgWidth === w
-                            ? 'bg-[#0F172A] text-white'
-                            : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
-                        }`}
-                      >
-                        {w === 3840 ? '4K (3840px)' : `${w}px`}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              <>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                  Export Width:
+                </span>
+                {[1024, 2048, 3840].map((w) => {
+                  const active = svgWidth === w;
+                  return (
+                    <button
+                      key={w}
+                      type="button"
+                      onClick={() => setSvgWidth(w)}
+                      className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 font-mono text-xs font-semibold tabular-nums transition-all ${
+                        active
+                          ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                          : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
+                      }`}
+                    >
+                      {active && <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />}
+                      <span>{w === 3840 ? '4K (3840px)' : `${w}px`}</span>
+                    </button>
+                  );
+                })}
+              </>
             )}
 
             {mode === 'instagram-split' && (
-              <div className="flex gap-2">
+              <>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                  Grid Layout:
+                </span>
                 {[
-                  { label: '3×3 Grid (9 Tiles)', cols: 3, rows: 3 },
-                  { label: '3×1 Carousel (3 Tiles)', cols: 3, rows: 1 },
-                  { label: '3×2 Grid (6 Tiles)', cols: 3, rows: 2 },
+                  { label: '3x3 Grid (9 Tiles)', cols: 3, rows: 3 },
+                  { label: '3x1 Carousel (3 Tiles)', cols: 3, rows: 1 },
+                  { label: '3x2 Grid (6 Tiles)', cols: 3, rows: 2 },
                 ].map((opt) => {
                   const active = gridCols === opt.cols && gridRows === opt.rows;
                   return (
@@ -632,87 +584,255 @@ export function ToolWorkspace({
                         setGridCols(opt.cols);
                         setGridRows(opt.rows);
                       }}
-                      className={`rounded-md px-3 py-1.5 text-xs font-medium ${
+                      className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all ${
                         active
-                          ? 'bg-[#0F172A] text-white'
-                          : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
+                          ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                          : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
                       }`}
                     >
-                      {opt.label}
+                      {active && <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />}
+                      <span>{opt.label}</span>
                     </button>
                   );
                 })}
-              </div>
+              </>
             )}
 
             {mode === 'discord-resize' && (
-              <div className="flex gap-2">
+              <>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                  Preset:
+                </span>
                 <button
                   type="button"
                   onClick={() => setDiscordMode('emoji')}
-                  className={`rounded-md px-3 py-1.5 text-xs font-medium ${
+                  className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all ${
                     discordMode === 'emoji'
-                      ? 'bg-[#0F172A] text-white'
-                      : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
+                      ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                      : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
                   }`}
                 >
-                  Emoji (128×128, &lt;256KB)
+                  {discordMode === 'emoji' && (
+                    <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />
+                  )}
+                  <span>Emoji (128x128, &lt;256KB)</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setDiscordMode('banner')}
-                  className={`rounded-md px-3 py-1.5 text-xs font-medium ${
+                  className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all ${
                     discordMode === 'banner'
-                      ? 'bg-[#0F172A] text-white'
-                      : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
+                      ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                      : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
                   }`}
                 >
-                  Server Banner (960×540)
+                  {discordMode === 'banner' && (
+                    <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />
+                  )}
+                  <span>Server Banner (960x540)</span>
+                </button>
+              </>
+            )}
+
+            {mode === 'passport-photo' && (
+              <>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                  Country Spec:
+                </span>
+                {[
+                  { id: 'us-2x2' as const, label: 'US 2x2" (600x600px)' },
+                  { id: 'uk-35x45' as const, label: 'UK / EU 35x45mm' },
+                  { id: 'print-4x6' as const, label: '4x6" Print Sheet (6 Photos)' },
+                ].map((opt) => {
+                  const active = passportPreset === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setPassportPreset(opt.id)}
+                      className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all ${
+                        active
+                          ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                          : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
+                      }`}
+                    >
+                      {active && <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />}
+                      <span>{opt.label}</span>
+                    </button>
+                  );
+                })}
+              </>
+            )}
+
+            {mode === 'base64' && (
+              <>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                  Mode:
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBase64Direction('encode');
+                    resetOutputs();
+                  }}
+                  className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                    base64Direction === 'encode'
+                      ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                      : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
+                  }`}
+                >
+                  {base64Direction === 'encode' && (
+                    <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />
+                  )}
+                  <span>Image to Base64 Encoder</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setBase64Direction('decode');
+                    resetOutputs();
+                  }}
+                  className={`inline-flex items-center gap-1.5 rounded-xl border px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                    base64Direction === 'decode'
+                      ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                      : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
+                  }`}
+                >
+                  {base64Direction === 'decode' && (
+                    <Check className="h-3 w-3 text-[#EA580C]" aria-hidden="true" />
+                  )}
+                  <span>Base64 to Image Decoder</span>
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Main Interactive Tool Card */}
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={handleDrop}
+          className={`mx-auto mt-6 max-w-4xl rounded-2xl border bg-white p-5 transition-all sm:p-7 ${
+            isDragging
+              ? 'border-[#F97316] bg-[#FFF7ED]/40 ring-4 ring-[#F97316]/15'
+              : 'border-[#E5E7EB] shadow-[0_8px_30px_-10px_rgba(17,24,39,0.08)]'
+          }`}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*,.heic,.heif,.svg"
+            onChange={handleFileInput}
+            className="sr-only"
+          />
+
+          {/* Upload / Source Drop Box */}
+          {!(mode === 'base64' && base64Direction === 'decode') && (
+            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#D1D5DB] bg-[#FAFAFA]/70 px-5 py-7 text-center">
+              {sourceImage ? (
+                <div className="flex w-full flex-col gap-4 text-left sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex min-w-0 items-center gap-3.5">
+                    {sourceImage.previewUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={sourceImage.previewUrl}
+                        alt={sourceImage.name}
+                        referrerPolicy="no-referrer"
+                        className="h-14 w-14 shrink-0 rounded-xl border border-[#E5E7EB] bg-white object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#FED7AA] bg-[#FFF7ED] text-[#EA580C]">
+                        <UploadCloud className="h-5 w-5" aria-hidden="true" />
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-[#111827]">
+                        {sourceImage.name}
+                      </p>
+                      <p className="font-mono text-xs text-[#6B7280] tabular-nums">
+                        {sourceImage.formatLabel} &middot;{' '}
+                        {formatBytes(sourceImage.sizeBytes)}
+                        {sourceImage.width && sourceImage.height
+                          ? ` · ${sourceImage.width} × ${sourceImage.height} px`
+                          : ''}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="inline-flex min-h-[40px] shrink-0 items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2 text-xs font-semibold text-[#111827] hover:border-[#FDBA74] hover:bg-[#FFF7ED]"
+                  >
+                    <ImagePlus className="h-4 w-4 text-[#EA580C]" aria-hidden="true" />
+                    <span>Change Image</span>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#FED7AA] bg-[#FFF7ED] text-[#EA580C]">
+                    <UploadCloud className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <p className="mt-3 text-sm font-semibold text-[#111827]">
+                    Drag &amp; drop, paste or select an image
+                  </p>
+                  <p className="mt-1 text-xs text-[#6B7280]">
+                    JPG, PNG, WebP, SVG, or HEIC &middot; Never leaves your browser
+                  </p>
+
+                  <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="btn-orange-gradient inline-flex min-h-[40px] items-center gap-2 rounded-xl px-5 py-2 text-xs font-semibold"
+                    >
+                      <ImagePlus className="h-4 w-4" aria-hidden="true" />
+                      <span>Select Image</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleTrySample}
+                      className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2 text-xs font-semibold text-[#111827] hover:border-[#FDBA74] hover:bg-[#FFF7ED]/60"
+                    >
+                      <Sparkles className="h-3.5 w-3.5 text-[#F97316]" aria-hidden="true" />
+                      <span>Try Sample</span>
+                    </button>
+                  </div>
+                  <p className="mt-3 text-[11px] text-[#9CA3AF]">
+                    or drag &amp; drop, paste (Ctrl + V) your file here
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Action Run Button */}
+          {mode !== 'color-picker' &&
+            !(mode === 'base64' && base64Direction === 'encode') && (
+              <div className="mt-5 flex justify-end">
+                <button
+                  type="button"
+                  disabled={
+                    isProcessing ||
+                    (!sourceImage &&
+                      !(mode === 'base64' && base64Direction === 'decode'))
+                  }
+                  onClick={runProcessing}
+                  className="btn-orange-gradient inline-flex min-h-[42px] items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <span>
+                    {isProcessing ? 'Processing locally...' : 'Process Image'}
+                  </span>
                 </button>
               </div>
             )}
 
-            {mode === 'passport-photo' && (
-              <div className="flex flex-wrap gap-2">
-                {[
-                  { id: 'us-2x2' as const, label: 'US 2×2" (600×600px)' },
-                  { id: 'uk-35x45' as const, label: 'UK / EU 35×45mm' },
-                  { id: 'print-4x6' as const, label: '4×6" Print Sheet (6 Photos)' },
-                ].map((opt) => (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() => setPassportPreset(opt.id)}
-                    className={`rounded-md px-3 py-1.5 text-xs font-medium ${
-                      passportPreset === opt.id
-                        ? 'bg-[#0F172A] text-white'
-                        : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Action Run Button (for canvas-processing tools) */}
-            {mode !== 'color-picker' && !(mode === 'base64' && base64Direction === 'encode') && (
-              <button
-                type="button"
-                disabled={
-                  isProcessing ||
-                  (!sourceImage && !(mode === 'base64' && base64Direction === 'decode'))
-                }
-                onClick={runProcessing}
-                className="inline-flex min-h-[42px] items-center gap-2 rounded-lg bg-[#2563EB] px-5 py-2.5 text-sm font-medium text-white shadow-xs transition-colors hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <span>{isProcessing ? 'Processing locally...' : 'Process Image'}</span>
-              </button>
-            )}
-          </div>
-
           {errorMsg && (
-            <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-xs font-medium text-red-700">
+            <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-xs font-medium text-red-700">
               {errorMsg}
             </p>
           )}
@@ -721,7 +841,7 @@ export function ToolWorkspace({
           {mode === 'base64' && (
             <div className="mt-5 space-y-3">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-medium text-[#475569]">
+                <label className="text-xs font-semibold text-[#4B5563]">
                   {base64Direction === 'encode'
                     ? 'Generated Data URI (Ready for HTML / CSS)'
                     : 'Paste Base64 or Data URI'}
@@ -730,7 +850,7 @@ export function ToolWorkspace({
                   <button
                     type="button"
                     onClick={() => handleCopy(base64Text, 'b64')}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-2.5 py-1 text-xs font-medium text-[#0F172A] hover:bg-white"
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-semibold text-[#111827] hover:border-[#FDBA74] hover:bg-[#FFF7ED]"
                   >
                     {copiedKey === 'b64' ? (
                       <>
@@ -756,7 +876,7 @@ export function ToolWorkspace({
                     ? 'Select an image above to generate its Base64 Data URI...'
                     : 'Paste data:image/png;base64,... or raw Base64 string here'
                 }
-                className="w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-3 font-mono text-xs text-[#0F172A] focus:border-[#2563EB] focus:bg-white focus:outline-none"
+                className="w-full rounded-xl border border-[#E5E7EB] bg-[#FAFAFA] p-3 font-mono text-xs text-[#111827] focus:border-[#F97316] focus:bg-white focus:outline-none"
               />
             </div>
           )}
@@ -765,39 +885,39 @@ export function ToolWorkspace({
           {mode === 'color-picker' && sourceImage && (
             <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
               <div className="lg:col-span-2">
-                <p className="mb-2 text-xs font-medium text-[#475569]">
+                <p className="mb-2 text-xs font-medium text-[#6B7280]">
                   Click anywhere on the image to sample a pixel color:
                 </p>
                 <canvas
                   ref={colorCanvasRef}
                   onClick={handleCanvasPick}
-                  className="max-h-96 w-full cursor-crosshair rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] object-contain"
+                  className="max-h-96 w-full cursor-crosshair rounded-xl border border-[#E5E7EB] bg-[#FAFAFA] object-contain"
                 />
               </div>
 
               <div className="space-y-4">
                 {pickedColor && (
-                  <div className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-4">
-                    <p className="text-xs font-medium text-[#475569]">
+                  <div className="card-orange-sheen rounded-xl border border-[#E5E7EB] p-4">
+                    <p className="text-xs font-semibold text-[#4B5563]">
                       Picked Pixel Color
                     </p>
                     <div className="mt-2.5 flex items-center gap-3">
                       <span
-                        className="h-10 w-10 shrink-0 rounded-lg border border-[#E2E8F0]"
+                        className="h-10 w-10 shrink-0 rounded-lg border border-[#E5E7EB]"
                         style={{ backgroundColor: pickedColor.hex }}
                       />
                       <div className="min-w-0 font-mono text-xs">
-                        <p className="font-semibold text-[#0F172A]">
+                        <p className="font-semibold text-[#111827]">
                           {pickedColor.hex}
                         </p>
-                        <p className="text-[#475569]">{pickedColor.rgb}</p>
+                        <p className="text-[#6B7280]">{pickedColor.rgb}</p>
                       </div>
                     </div>
                   </div>
                 )}
 
                 <div>
-                  <p className="text-xs font-medium text-[#475569]">
+                  <p className="text-xs font-semibold text-[#4B5563]">
                     Extracted Palette
                   </p>
                   <div className="mt-2 space-y-2">
@@ -806,18 +926,18 @@ export function ToolWorkspace({
                         key={c.hex}
                         type="button"
                         onClick={() => handleCopy(c.hex, c.hex)}
-                        className="flex w-full items-center justify-between rounded-lg border border-[#E2E8F0] bg-white px-3 py-2 text-left transition-colors hover:border-[#2563EB]/40"
+                        className="flex w-full items-center justify-between rounded-xl border border-[#E5E7EB] bg-white px-3 py-2 text-left transition-colors hover:border-[#FDBA74] hover:bg-[#FFF7ED]/50"
                       >
                         <div className="flex items-center gap-2.5">
                           <span
-                            className="h-5 w-5 rounded border border-[#E2E8F0]"
+                            className="h-5 w-5 rounded border border-[#E5E7EB]"
                             style={{ backgroundColor: c.hex }}
                           />
-                          <span className="font-mono text-xs font-medium text-[#0F172A]">
+                          <span className="font-mono text-xs font-semibold text-[#111827]">
                             {c.hex}
                           </span>
                         </div>
-                        <span className="text-xs text-[#64748B]">
+                        <span className="text-xs font-medium text-[#EA580C]">
                           {copiedKey === c.hex ? 'Copied' : 'Copy'}
                         </span>
                       </button>
@@ -830,7 +950,7 @@ export function ToolWorkspace({
 
           {/* Processed Single Image Output */}
           {outputUrl && outputMeta && (
-            <div className="mt-6 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-5">
+            <div className="card-orange-sheen mt-6 rounded-xl border border-[#FED7AA] p-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -838,18 +958,18 @@ export function ToolWorkspace({
                     src={outputUrl}
                     alt="Processed output preview"
                     referrerPolicy="no-referrer"
-                    className="h-20 w-20 rounded-lg border border-[#E2E8F0] bg-white object-contain p-1"
+                    className="h-20 w-20 rounded-xl border border-[#E5E7EB] bg-white object-contain p-1"
                   />
                   <div>
-                    <p className="text-sm font-semibold text-[#0F172A]">
+                    <p className="text-sm font-bold text-[#111827]">
                       Ready to Download
                     </p>
-                    <p className="mt-0.5 font-mono text-xs text-[#059669] tabular-nums">
-                      {formatBytes(outputMeta.sizeBytes)} · {outputMeta.width} ×{' '}
-                      {outputMeta.height} px
+                    <p className="mt-0.5 font-mono text-xs font-medium text-[#059669] tabular-nums">
+                      {formatBytes(outputMeta.sizeBytes)} &middot;{' '}
+                      {outputMeta.width} &times; {outputMeta.height} px
                     </p>
                     {outputMeta.note && (
-                      <p className="mt-0.5 text-xs text-[#475569]">
+                      <p className="mt-0.5 text-xs text-[#6B7280]">
                         {outputMeta.note}
                       </p>
                     )}
@@ -859,7 +979,7 @@ export function ToolWorkspace({
                 <a
                   href={outputUrl}
                   download={`toolimg-${mode}.${outputMeta.ext}`}
-                  className="inline-flex min-h-[42px] items-center justify-center gap-2 rounded-lg bg-[#059669] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#047857]"
+                  className="inline-flex min-h-[42px] items-center justify-center gap-2 rounded-xl bg-[#059669] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#047857]"
                 >
                   <Download className="h-4 w-4" aria-hidden="true" />
                   <span>Download .{outputMeta.ext.toUpperCase()}</span>
@@ -871,7 +991,7 @@ export function ToolWorkspace({
           {/* Grid Splitter Tiles Output */}
           {gridTiles.length > 0 && (
             <div className="mt-6">
-              <p className="mb-3 text-xs font-medium text-[#475569]">
+              <p className="mb-3 text-xs font-medium text-[#6B7280]">
                 Generated {gridTiles.length} grid tiles — click any tile to
                 download:
               </p>
@@ -886,20 +1006,20 @@ export function ToolWorkspace({
                     key={`${tile.row}-${tile.col}`}
                     href={tile.dataUrl}
                     download={`grid-r${tile.row}-c${tile.col}.png`}
-                    className="group relative overflow-hidden rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] p-1.5 transition-colors hover:border-[#2563EB]"
+                    className="group relative overflow-hidden rounded-xl border border-[#E5E7EB] bg-white p-1.5 transition-colors hover:border-[#F97316]"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={tile.dataUrl}
                       alt={`Grid tile row ${tile.row} column ${tile.col}`}
                       referrerPolicy="no-referrer"
-                      className="w-full rounded object-cover"
+                      className="w-full rounded-lg object-cover"
                     />
-                    <span className="mt-1.5 flex items-center justify-between font-mono text-[11px] text-[#475569]">
+                    <span className="mt-1.5 flex items-center justify-between font-mono text-[11px] text-[#6B7280]">
                       <span>
-                        R{tile.row}·C{tile.col}
+                        R{tile.row}&middot;C{tile.col}
                       </span>
-                      <Download className="h-3 w-3 text-[#2563EB]" />
+                      <Download className="h-3 w-3 text-[#EA580C]" />
                     </span>
                   </a>
                 ))}
@@ -908,20 +1028,72 @@ export function ToolWorkspace({
           )}
         </div>
 
+        {/* 4-Step Workflow Strip */}
+        <div className="mt-12">
+          <div className="text-center">
+            <h2 className="font-[family-name:var(--font-display)] text-xl font-extrabold text-[#111827] sm:text-2xl">
+              How {title} Works in{' '}
+              <span className="text-orange-gradient">4 Simple Steps</span>
+            </h2>
+            <p className="mt-1.5 text-xs text-[#6B7280] sm:text-sm">
+              Zero server queues &mdash; instant browser execution
+            </p>
+          </div>
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                step: 'STEP 01',
+                title: 'Select or Drop Image',
+                copy: 'Choose, paste (Ctrl+V), or drag any JPG, PNG, WebP, SVG, or HEIC file.',
+              },
+              {
+                step: 'STEP 02',
+                title: 'Pick Preset or Format',
+                copy: 'Select your exact KB target, social dimension, or output format above.',
+              },
+              {
+                step: 'STEP 03',
+                title: 'Local Canvas Processing',
+                copy: 'Your browser renders and optimizes every pixel privately in memory.',
+              },
+              {
+                step: 'STEP 04',
+                title: 'Preview & Download',
+                copy: 'Inspect dimensions and file size, then download your clean output.',
+              },
+            ].map((item) => (
+              <div
+                key={item.step}
+                className="card-orange-sheen rounded-2xl border border-[#E5E7EB] p-5 shadow-[0_1px_3px_rgba(17,24,39,0.04)]"
+              >
+                <span className="font-mono text-[11px] font-semibold text-[#EA580C]">
+                  {item.step}
+                </span>
+                <h3 className="mt-2 font-[family-name:var(--font-display)] text-sm font-bold text-[#111827]">
+                  {item.title}
+                </h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-[#6B7280]">
+                  {item.copy}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Related Tools in Silo */}
-        <div className="mt-10">
-          <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold text-[#0F172A]">
+        <div className="mt-12">
+          <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[#111827]">
             More {pillar?.tabLabel} Tools
           </h2>
-          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
             {relatedTools.map((rt) => (
               <Link
                 key={rt.id}
                 href={rt.href}
-                className="rounded-xl border border-[#E2E8F0] bg-white p-4 transition-colors hover:border-[#2563EB]/40"
+                className="card-orange-sheen rounded-2xl border border-[#E5E7EB] p-4 transition-all hover:-translate-y-0.5 hover:border-[#FDBA74]"
               >
-                <p className="text-sm font-semibold text-[#0F172A]">{rt.title}</p>
-                <p className="mt-1 text-xs text-[#475569]">{rt.benefit}</p>
+                <p className="text-sm font-bold text-[#111827]">{rt.title}</p>
+                <p className="mt-1 text-xs text-[#6B7280]">{rt.benefit}</p>
               </Link>
             ))}
           </div>

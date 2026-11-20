@@ -103,18 +103,18 @@ function CommandSearchDialog({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-[#0F172A]/40 px-4 pt-20 backdrop-blur-[2px]"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-[#111827]/40 px-4 pt-20 backdrop-blur-[2px]"
       role="dialog"
       aria-modal="true"
       aria-label="Quick Tool Search"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-xl overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-2xl"
+        className="w-full max-w-xl overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-3 border-b border-[#E2E8F0] px-4 py-3">
-          <Search className="h-4 w-4 shrink-0 text-[#64748B]" aria-hidden="true" />
+        <div className="flex items-center gap-3 border-b border-[#F3F4F6] px-4 py-3">
+          <Search className="h-4 w-4 shrink-0 text-[#F97316]" aria-hidden="true" />
           <input
             ref={inputRef}
             type="text"
@@ -125,13 +125,13 @@ function CommandSearchDialog({ onClose }: { onClose: () => void }) {
             }}
             onKeyDown={handleKeyDown}
             placeholder="Search tools (e.g. 50KB, HEIC, EXIF, Passport, Base64)..."
-            className="w-full bg-transparent text-sm text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none"
+            className="w-full bg-transparent text-sm text-[#111827] placeholder:text-[#9CA3AF] focus:outline-none"
           />
           <button
             type="button"
             onClick={onClose}
             aria-label="Close search"
-            className="rounded-md p-1 text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A]"
+            className="rounded-lg p-1 text-[#6B7280] hover:bg-[#FFF7ED] hover:text-[#111827]"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -139,7 +139,7 @@ function CommandSearchDialog({ onClose }: { onClose: () => void }) {
 
         <div className="max-h-96 overflow-y-auto p-2">
           {filtered.length === 0 ? (
-            <div className="px-4 py-10 text-center text-sm text-[#475569]">
+            <div className="px-4 py-10 text-center text-sm text-[#6B7280]">
               No matching image tools for &ldquo;{query}&rdquo;.
             </div>
           ) : (
@@ -152,18 +152,18 @@ function CommandSearchDialog({ onClose }: { onClose: () => void }) {
                       type="button"
                       onClick={() => navigateTo(item.href)}
                       onMouseEnter={() => setSelectedIndex(idx)}
-                      className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
+                      className={`flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${
                         isSelected
-                          ? 'bg-[#EFF6FF] text-[#0F172A]'
-                          : 'text-[#0F172A] hover:bg-[#F8FAFC]'
+                          ? 'bg-[#FFF7ED] text-[#111827]'
+                          : 'text-[#111827] hover:bg-[#FAFAFA]'
                       }`}
                     >
                       <div className="flex min-w-0 items-center gap-3">
                         <span
-                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border ${
+                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border ${
                             isSelected
-                              ? 'border-[#BFDBFE] bg-white text-[#2563EB]'
-                              : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#475569]'
+                              ? 'border-[#FED7AA] bg-white text-[#EA580C]'
+                              : 'border-[#E5E7EB] bg-[#FAFAFA] text-[#6B7280]'
                           }`}
                         >
                           {item.iconName ? (
@@ -174,21 +174,21 @@ function CommandSearchDialog({ onClose }: { onClose: () => void }) {
                         </span>
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="truncate text-sm font-medium">
+                            <span className="truncate text-sm font-semibold">
                               {item.title}
                             </span>
-                            <span className="shrink-0 text-xs text-[#64748B]">
-                              · {item.group}
+                            <span className="shrink-0 text-xs text-[#9CA3AF]">
+                              &middot; {item.group}
                             </span>
                           </div>
-                          <p className="truncate text-xs text-[#475569]">
+                          <p className="truncate text-xs text-[#6B7280]">
                             {item.subtitle}
                           </p>
                         </div>
                       </div>
                       <ArrowRight
                         className={`h-4 w-4 shrink-0 ${
-                          isSelected ? 'text-[#2563EB]' : 'text-[#CBD5E1]'
+                          isSelected ? 'text-[#EA580C]' : 'text-[#D1D5DB]'
                         }`}
                         aria-hidden="true"
                       />
@@ -200,8 +200,8 @@ function CommandSearchDialog({ onClose }: { onClose: () => void }) {
           )}
         </div>
 
-        <div className="flex items-center justify-between border-t border-[#E2E8F0] bg-[#F8FAFC] px-4 py-2 text-xs text-[#64748B]">
-          <span>Use ↑ ↓ to navigate, Enter to open</span>
+        <div className="flex items-center justify-between border-t border-[#F3F4F6] bg-[#FAFAFA] px-4 py-2 text-xs text-[#9CA3AF]">
+          <span>Use &uarr; &darr; to navigate, Enter to open</span>
           <span>ESC to close</span>
         </div>
       </div>

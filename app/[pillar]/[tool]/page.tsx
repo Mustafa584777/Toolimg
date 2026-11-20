@@ -54,12 +54,12 @@ export default async function SiloToolPage({ params }: SiloToolPageProps) {
         mode={resolved.tool.mode}
         preset={resolved.tool.defaultPreset}
       />
-      <section className="border-t border-[#E2E8F0] bg-white py-10">
+      <section className="border-t border-[#F3F4F6] bg-white py-10">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-[#0F172A]">
+          <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-[#111827]">
             How {resolved.tool.title} Works Privately
           </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#475569]">
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#6B7280]">
             {resolved.tool.benefit} Every step executes directly inside your
             browser using HTML5 Canvas and Web APIs—your image never leaves your
             device.

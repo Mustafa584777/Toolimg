@@ -62,10 +62,10 @@ export function ContactForm() {
   };
 
   return (
-    <div className="mt-8 border-t border-[#E2E8F0] pt-7">
+    <div className="mt-8 border-t border-[#F3F4F6] pt-7">
       <div className="flex items-center gap-2">
-        <Mail className="h-4 w-4 text-[#2563EB]" aria-hidden="true" />
-        <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold text-[#0F172A]">
+        <Mail className="h-4 w-4 text-[#F97316]" aria-hidden="true" />
+        <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[#111827]">
           Send a Message
         </h2>
       </div>
@@ -101,7 +101,7 @@ export function ContactForm() {
             <div>
               <label
                 htmlFor="contact-name"
-                className="block text-xs font-medium text-[#475569]"
+                className="block text-xs font-medium text-[#4B5563]"
               >
                 Your Name
               </label>
@@ -111,13 +111,13 @@ export function ContactForm() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Aarav Sharma"
-                className="mt-1.5 h-10 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 text-sm text-[#0F172A] focus:border-[#2563EB] focus:bg-white focus:outline-none"
+                className="mt-1.5 h-10 w-full rounded-xl border border-[#E5E7EB] bg-[#FAFAFA] px-3 text-sm text-[#111827] focus:border-[#F97316] focus:bg-white focus:outline-none"
               />
             </div>
             <div>
               <label
                 htmlFor="contact-email"
-                className="block text-xs font-medium text-[#475569]"
+                className="block text-xs font-medium text-[#4B5563]"
               >
                 Email Address
               </label>
@@ -127,7 +127,7 @@ export function ContactForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="mt-1.5 h-10 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 text-sm text-[#0F172A] focus:border-[#2563EB] focus:bg-white focus:outline-none"
+                className="mt-1.5 h-10 w-full rounded-xl border border-[#E5E7EB] bg-[#FAFAFA] px-3 text-sm text-[#111827] focus:border-[#F97316] focus:bg-white focus:outline-none"
               />
             </div>
           </div>
@@ -135,7 +135,7 @@ export function ContactForm() {
           <div>
             <label
               htmlFor="contact-message"
-              className="block text-xs font-medium text-[#475569]"
+              className="block text-xs font-medium text-[#4B5563]"
             >
               Message
             </label>
@@ -145,7 +145,7 @@ export function ContactForm() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Tell us about the tool, bug, or feature request..."
-              className="mt-1.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] p-3 text-sm text-[#0F172A] focus:border-[#2563EB] focus:bg-white focus:outline-none"
+              className="mt-1.5 w-full rounded-xl border border-[#E5E7EB] bg-[#FAFAFA] p-3 text-sm text-[#111827] focus:border-[#F97316] focus:bg-white focus:outline-none"
             />
           </div>
 
@@ -158,7 +158,7 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={isSending}
-            className="inline-flex min-h-[42px] items-center gap-2 rounded-lg bg-[#2563EB] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1D4ED8] disabled:opacity-60"
+            className="btn-orange-gradient inline-flex min-h-[42px] items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-semibold transition-all disabled:opacity-60"
           >
             {isSending ? (
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />

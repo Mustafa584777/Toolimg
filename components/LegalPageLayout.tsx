@@ -5,32 +5,32 @@ import { ContactForm } from '@/components/ContactForm';
 
 export function LegalPageLayout({ page }: { page: LegalPageSpec }) {
   return (
-    <section className="bg-[#F8FAFC] py-10 sm:py-14">
+    <section className="hero-orange-glow py-10 sm:py-14">
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#475569] hover:text-[#0F172A]"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#6B7280] hover:text-[#EA580C]"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
           <span>Back to toolimg.online</span>
         </Link>
 
-        <article className="mt-5 rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-xs sm:p-9">
-          <div className="border-b border-[#E2E8F0] pb-6">
+        <article className="mt-5 rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-[0_8px_30px_-10px_rgba(17,24,39,0.06)] sm:p-9">
+          <div className="border-b border-[#F3F4F6] pb-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] px-3 py-1 text-xs font-medium text-[#059669]">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-[#FFF7ED] px-3 py-1 text-xs font-semibold text-[#EA580C]">
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>toolimg.online Policy &amp; Info</span>
               </span>
-              <span className="font-mono text-xs text-[#64748B]">
+              <span className="font-mono text-xs text-[#9CA3AF]">
                 Updated {page.updatedAt}
               </span>
             </div>
 
-            <h1 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+            <h1 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-extrabold tracking-tight text-[#111827] sm:text-3xl">
               {page.title}
             </h1>
-            <p className="mt-2.5 text-sm leading-relaxed text-[#475569] sm:text-base">
+            <p className="mt-2.5 text-sm leading-relaxed text-[#6B7280] sm:text-base">
               {page.summary}
             </p>
           </div>
@@ -38,16 +38,16 @@ export function LegalPageLayout({ page }: { page: LegalPageSpec }) {
           <div className="mt-6 space-y-6">
             {page.sections.map((section) => (
               <div key={section.heading}>
-                <h2 className="font-[family-name:var(--font-display)] text-base font-semibold text-[#0F172A] sm:text-lg">
+                <h2 className="font-[family-name:var(--font-display)] text-base font-bold text-[#111827] sm:text-lg">
                   {section.heading}
                 </h2>
-                <div className="mt-2 space-y-2.5 text-sm leading-relaxed text-[#475569]">
+                <div className="mt-2 space-y-2.5 text-sm leading-relaxed text-[#4B5563]">
                   {section.paragraphs.map((p, idx) => (
                     <p key={idx}>{p}</p>
                   ))}
                 </div>
                 {section.bullets && (
-                  <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-[#475569]">
+                  <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm text-[#4B5563]">
                     {section.bullets.map((b, idx) => (
                       <li key={idx}>{b}</li>
                     ))}

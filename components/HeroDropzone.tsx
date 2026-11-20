@@ -1,14 +1,18 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   ArrowRight,
   FileImage,
   ImagePlus,
+  Infinity as InfinityIcon,
   Lock,
+  ShieldCheck,
   Sparkles,
   UploadCloud,
   X,
+  Zap,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { InspectedImage } from '@/lib/image-processor';
@@ -61,6 +65,24 @@ export function HeroDropzone() {
       setIsInspecting(false);
     }
   }, []);
+
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (const item of items) {
+        if (item.type.startsWith('image/')) {
+          const file = item.getAsFile();
+          if (file) {
+            void handleFile(file);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener('paste', onPaste);
+    return () => window.removeEventListener('paste', onPaste);
+  }, [handleFile]);
 
   const handleDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
@@ -180,17 +202,111 @@ export function HeroDropzone() {
   };
 
   return (
-    <section className="relative border-b border-[#E2E8F0] bg-[#F8FAFC] pt-10 pb-14 sm:pt-14 sm:pb-16">
+    <section className="hero-orange-glow relative border-b border-[#F3F4F6] pt-8 pb-14 sm:pt-12 sm:pb-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="font-[family-name:var(--font-display)] text-[clamp(2.15rem,4.2vw,3.35rem)] font-bold leading-[1.1] tracking-tight text-[#0F172A] text-balance">
-            Private, Instant Image Tools — Right in Your Browser
+          {/* Subtle top pill link */}
+          <Link
+            href="#tools"
+            className="inline-flex items-center gap-2 rounded-full border border-[#E5E7EB] bg-white px-3.5 py-1.5 text-xs font-medium text-[#374151] shadow-[0_1px_3px_rgba(17,24,39,0.04)] transition-colors hover:border-[#FDBA74]"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-[#F97316]" aria-hidden="true" />
+            <span>100% Browser-Based</span>
+            <span className="h-3.5 w-px bg-[#E5E7EB]" aria-hidden="true" />
+            <span className="font-semibold text-[#EA580C]">Explore tools &rarr;</span>
+          </Link>
+
+          <h1 className="mt-5 font-[family-name:var(--font-display)] text-[clamp(2.2rem,4.6vw,3.5rem)] font-extrabold leading-[1.08] tracking-tight text-[#111827] text-balance">
+            Private, Instant Image Tools —{' '}
+            <span className="relative inline-block">
+              <span className="text-orange-gradient">Right in Your Browser</span>
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 280 14"
+                fill="none"
+                className="pointer-events-none absolute -bottom-1.5 left-0 h-3 w-full"
+                preserveAspectRatio="none"
+              >
+                <defs>
+                  <linearGradient id="heroCurveGrad" x1="0" y1="0" x2="280" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#F97316" />
+                    <stop offset="100%" stopColor="#EA580C" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M3 10.5C75 3.2 195 2.4 277 9.5"
+                  stroke="url(#heroCurveGrad)"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#475569] sm:text-lg">
+
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[#6B7280] sm:text-lg">
             Compress to exact KB, convert HEIC/SVG, strip EXIF metadata, and
             resize for social media. No server uploads, no file limits, 100%
             free forever.
           </p>
+
+          {/* Hero Dual CTA */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="#tools"
+              className="btn-orange-gradient inline-flex min-h-[44px] items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
+            >
+              <span>Browse Tools</span>
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-5 py-2.5 text-sm font-semibold text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.04)] transition-colors hover:border-[#FDBA74] hover:bg-[#FFF7ED]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
+            >
+              <ImagePlus className="h-4 w-4 text-[#EA580C]" aria-hidden="true" />
+              <span>Open Image File</span>
+            </button>
+          </div>
+
+          {/* 4-Item Inline Feature Strip */}
+          <div className="mx-auto mt-7 grid max-w-3xl grid-cols-2 gap-3 text-left sm:grid-cols-4 sm:gap-4">
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FFF7ED] text-[#EA580C]">
+                <Zap className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-[#111827]">Fast &amp; Reliable</p>
+                <p className="text-[11px] text-[#6B7280]">Results in milliseconds</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECFDF5] text-[#059669]">
+                <ShieldCheck className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-[#111827]">Zero Uploads</p>
+                <p className="text-[11px] text-[#6B7280]">Private on your device</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EFF6FF] text-[#2563EB]">
+                <InfinityIcon className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-[#111827]">Free &amp; Unlimited</p>
+                <p className="text-[11px] text-[#6B7280]">No watermarks or caps</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FAF5FF] text-[#7C3AED]">
+                <Lock className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-[#111827]">Exact Specs</p>
+                <p className="text-[11px] text-[#6B7280]">KB, DPI &amp; social sizes</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Interactive Quick-Start Smart Dropzone */}
@@ -202,10 +318,10 @@ export function HeroDropzone() {
             }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
-            className={`rounded-2xl border bg-white p-5 transition-colors sm:p-7 ${
+            className={`rounded-2xl border bg-white p-4 transition-all sm:p-6 ${
               isDragging
-                ? 'border-[#2563EB] bg-[#EFF6FF]/60 ring-4 ring-[#2563EB]/10'
-                : 'border-[#E2E8F0] shadow-xs hover:border-[#CBD5E1]'
+                ? 'border-[#F97316] bg-[#FFF7ED]/50 ring-4 ring-[#F97316]/15'
+                : 'border-[#E5E7EB] shadow-[0_8px_30px_-10px_rgba(17,24,39,0.08)] hover:border-[#FDBA74]'
             }`}
           >
             <input
@@ -218,17 +334,17 @@ export function HeroDropzone() {
             />
 
             {!inspected ? (
-              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#CBD5E1] bg-[#F8FAFC]/70 px-4 py-9 text-center sm:py-11">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#E2E8F0] bg-white text-[#2563EB] shadow-2xs">
+              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#D1D5DB] bg-[#FAFAFA]/70 px-4 py-8 text-center sm:py-10">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#FED7AA] bg-[#FFF7ED] text-[#EA580C]">
                   <UploadCloud className="h-6 w-6" aria-hidden="true" />
                 </div>
 
-                <h2 className="mt-4 font-[family-name:var(--font-display)] text-base font-semibold text-[#0F172A] sm:text-lg">
+                <h2 className="mt-4 font-[family-name:var(--font-display)] text-base font-semibold text-[#111827] sm:text-lg">
                   {isInspecting
                     ? 'Inspecting image locally...'
-                    : 'Drop an image here to start instantly'}
+                    : 'Drag & drop, paste or select an image'}
                 </h2>
-                <p className="mt-1 text-xs text-[#475569] sm:text-sm">
+                <p className="mt-1 text-xs text-[#6B7280] sm:text-sm">
                   Supports JPG, PNG, WebP, HEIC, and SVG · Processed in browser
                   memory
                 </p>
@@ -239,11 +355,11 @@ export function HeroDropzone() {
                   </p>
                 )}
 
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex min-h-[42px] items-center gap-2 whitespace-nowrap rounded-lg bg-[#2563EB] px-5 py-2.5 text-sm font-medium text-white shadow-xs transition-colors hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2"
+                    className="btn-orange-gradient inline-flex min-h-[42px] items-center gap-2 whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
                   >
                     <ImagePlus className="h-4 w-4 shrink-0" aria-hidden="true" />
                     <span>Select Image</span>
@@ -253,28 +369,21 @@ export function HeroDropzone() {
                     type="button"
                     onClick={handleTrySample}
                     disabled={isInspecting}
-                    className="inline-flex min-h-[42px] items-center gap-2 whitespace-nowrap rounded-lg border border-[#E2E8F0] bg-white px-4 py-2.5 text-sm font-medium text-[#0F172A] transition-colors hover:border-[#CBD5E1] hover:bg-[#F8FAFC] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 disabled:opacity-60"
+                    className="inline-flex min-h-[42px] items-center gap-2 whitespace-nowrap rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm font-semibold text-[#111827] transition-colors hover:border-[#FDBA74] hover:bg-[#FFF7ED]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2 disabled:opacity-60"
                   >
-                    <Sparkles className="h-4 w-4 shrink-0 text-[#2563EB]" aria-hidden="true" />
+                    <Sparkles className="h-4 w-4 shrink-0 text-[#F97316]" aria-hidden="true" />
                     <span>Try Sample Image</span>
                   </button>
                 </div>
 
-                <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-[#64748B]">
-                  <span className="inline-flex items-center gap-1.5 text-[#059669] font-medium">
-                    <Lock className="h-3.5 w-3.5" aria-hidden="true" />
-                    Zero network uploads
-                  </span>
-                  <span aria-hidden="true">·</span>
-                  <span>No daily file limits</span>
-                  <span aria-hidden="true">·</span>
-                  <span>Instant local preview</span>
-                </div>
+                <p className="mt-4 text-[11px] text-[#9CA3AF]">
+                  or drag &amp; drop, paste (Ctrl + V) your file anywhere here
+                </p>
               </div>
             ) : (
               /* Inspected Image State + 1-Click Quick Action Pills */
               <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-                <div className="relative flex h-36 w-full shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] sm:h-40 sm:w-48">
+                <div className="relative flex h-36 w-full shrink-0 items-center justify-center overflow-hidden rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] sm:h-40 sm:w-48">
                   {inspected.previewUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -285,8 +394,8 @@ export function HeroDropzone() {
                     />
                   ) : (
                     <div className="flex flex-col items-center gap-2 p-4 text-center">
-                      <FileImage className="h-8 w-8 text-[#2563EB]" aria-hidden="true" />
-                      <span className="font-mono text-xs font-medium text-[#475569]">
+                      <FileImage className="h-8 w-8 text-[#EA580C]" aria-hidden="true" />
+                      <span className="font-mono text-xs font-medium text-[#4B5563]">
                         {inspected.formatLabel} File Ready
                       </span>
                     </div>
@@ -296,25 +405,25 @@ export function HeroDropzone() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="truncate font-[family-name:var(--font-display)] text-base font-semibold text-[#0F172A]">
+                      <p className="truncate font-[family-name:var(--font-display)] text-base font-semibold text-[#111827]">
                         {inspected.name}
                       </p>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs text-[#475569] tabular-nums">
-                        <span className="font-semibold text-[#2563EB]">
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs text-[#6B7280] tabular-nums">
+                        <span className="font-semibold text-[#EA580C]">
                           {inspected.formatLabel}
                         </span>
-                        <span aria-hidden="true">·</span>
+                        <span aria-hidden="true">&middot;</span>
                         <span>{formatReadableBytes(inspected.sizeBytes)}</span>
                         {inspected.width && inspected.height && (
                           <>
-                            <span aria-hidden="true">·</span>
+                            <span aria-hidden="true">&middot;</span>
                             <span>
-                              {inspected.width} × {inspected.height} px
+                              {inspected.width} &times; {inspected.height} px
                             </span>
                           </>
                         )}
-                        <span aria-hidden="true">·</span>
-                        <span className="text-[#059669]">
+                        <span aria-hidden="true">&middot;</span>
+                        <span className="font-medium text-[#059669]">
                           {inspected.hasExifMarkers
                             ? 'EXIF metadata detected'
                             : 'Ready locally'}
@@ -326,13 +435,13 @@ export function HeroDropzone() {
                       type="button"
                       onClick={handleClear}
                       aria-label="Clear selected image"
-                      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#E2E8F0] text-[#64748B] transition-colors hover:bg-[#F8FAFC] hover:text-[#0F172A]"
+                      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#E5E7EB] text-[#6B7280] transition-colors hover:bg-[#FFF7ED] hover:text-[#111827]"
                     >
                       <X className="h-4 w-4" aria-hidden="true" />
                     </button>
                   </div>
 
-                  <p className="mt-4 text-xs font-medium text-[#475569]">
+                  <p className="mt-4 text-xs font-medium text-[#4B5563]">
                     Choose a 1-click action to open with this image:
                   </p>
 
@@ -342,10 +451,10 @@ export function HeroDropzone() {
                         key={action.href}
                         type="button"
                         onClick={() => launchToolWithImage(action.href)}
-                        className={`inline-flex min-h-[38px] items-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 py-2 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] ${
+                        className={`inline-flex min-h-[38px] items-center gap-1.5 whitespace-nowrap rounded-xl px-3.5 py-2 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] ${
                           action.primary
-                            ? 'bg-[#2563EB] text-white hover:bg-[#1D4ED8]'
-                            : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#0F172A] hover:border-[#2563EB]/40 hover:bg-[#EFF6FF] hover:text-[#1D4ED8]'
+                            ? 'btn-orange-gradient'
+                            : 'border border-[#E5E7EB] bg-white text-[#111827] hover:border-[#FDBA74] hover:bg-[#FFF7ED] hover:text-[#C2410C]'
                         }`}
                       >
                         <span>{action.label}</span>
@@ -358,7 +467,7 @@ export function HeroDropzone() {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="text-xs font-medium text-[#2563EB] hover:underline"
+                      className="text-xs font-semibold text-[#EA580C] hover:underline"
                     >
                       Drop or choose a different file
                     </button>

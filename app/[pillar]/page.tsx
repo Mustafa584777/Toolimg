@@ -93,11 +93,11 @@ export default async function PillarOrShortcutPage({
   );
 
   return (
-    <section className="bg-[#F8FAFC] py-10 sm:py-14">
+    <section className="hero-orange-glow py-10 sm:py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#475569] hover:text-[#0F172A]"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-[#6B7280] hover:text-[#EA580C]"
         >
           <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
           <span>Back to toolimg.online Hub</span>
@@ -105,10 +105,10 @@ export default async function PillarOrShortcutPage({
 
         <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-[#0F172A] sm:text-4xl">
+            <h1 className="font-[family-name:var(--font-display)] text-3xl font-extrabold tracking-tight text-[#111827] sm:text-4xl">
               {silo.headline}
             </h1>
-            <p className="mt-2 max-w-2xl text-base text-[#475569]">
+            <p className="mt-2 max-w-2xl text-base text-[#6B7280]">
               {silo.description}
             </p>
           </div>
@@ -118,43 +118,43 @@ export default async function PillarOrShortcutPage({
           </span>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {toolsInPillar.map((tool) => (
             <article
               key={tool.id}
-              className="group flex flex-col justify-between rounded-xl border border-[#E2E8F0] bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-md"
+              className="card-orange-sheen group flex flex-col justify-between rounded-2xl border border-[#E5E7EB] p-5 shadow-[0_1px_3px_rgba(17,24,39,0.04)] transition-all hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-[0_12px_28px_-10px_rgba(234,88,12,0.14)]"
             >
               <div>
                 <div className="flex items-start justify-between">
                   <Link
                     href={tool.href}
-                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[#2563EB] group-hover:bg-[#EFF6FF]"
+                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#FED7AA] bg-[#FFF7ED] text-[#EA580C]"
                   >
                     <ToolIcon name={tool.iconName} className="h-5 w-5" />
                   </Link>
                   <Link
                     href={tool.href}
                     aria-label={`Open ${tool.title}`}
-                    className="p-1.5 text-[#94A3B8] group-hover:text-[#2563EB]"
+                    className="p-1.5 text-[#9CA3AF] group-hover:text-[#EA580C]"
                   >
                     <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </div>
 
-                <h2 className="mt-4 font-[family-name:var(--font-display)] text-base font-semibold text-[#0F172A]">
-                  <Link href={tool.href} className="hover:text-[#2563EB]">
+                <h2 className="mt-4 font-[family-name:var(--font-display)] text-base font-bold text-[#111827]">
+                  <Link href={tool.href} className="hover:text-[#EA580C]">
                     {tool.title}
                   </Link>
                 </h2>
-                <p className="mt-1.5 text-sm text-[#475569]">{tool.benefit}</p>
+                <p className="mt-1.5 text-sm text-[#6B7280]">{tool.benefit}</p>
               </div>
 
-              <div className="mt-4 flex flex-wrap gap-1.5 border-t border-[#F1F5F9] pt-3.5">
+              <div className="mt-4 flex flex-wrap gap-1.5 border-t border-[#F3F4F6] pt-3.5">
                 {tool.tags.map((tag) => (
                   <Link
                     key={`${tool.id}-${tag.label}`}
                     href={tag.href}
-                    className="rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-2.5 py-1 text-xs font-medium text-[#475569] hover:border-[#2563EB]/40 hover:bg-[#EFF6FF] hover:text-[#1D4ED8]"
+                    className="rounded-lg border border-[#E5E7EB] bg-white px-2.5 py-1 text-xs font-medium text-[#4B5563] hover:border-[#FB923C] hover:bg-[#FFF7ED] hover:text-[#C2410C]"
                   >
                     {tag.label}
                   </Link>
@@ -165,8 +165,8 @@ export default async function PillarOrShortcutPage({
         </div>
 
         {shortcutsInPillar.length > 0 && (
-          <div className="mt-12 rounded-xl border border-[#E2E8F0] bg-white p-6">
-            <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold text-[#0F172A]">
+          <div className="card-orange-sheen mt-12 rounded-2xl border border-[#E5E7EB] p-6">
+            <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[#111827]">
               Direct Spec Shortcuts
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -174,10 +174,10 @@ export default async function PillarOrShortcutPage({
                 <Link
                   key={sc.slug}
                   href={sc.href}
-                  className="flex items-center justify-between rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-4 py-3 text-sm font-medium text-[#0F172A] hover:border-[#2563EB]/40 hover:bg-[#EFF6FF]"
+                  className="flex items-center justify-between rounded-xl border border-[#E5E7EB] bg-white px-4 py-3 text-sm font-semibold text-[#111827] hover:border-[#FB923C] hover:bg-[#FFF7ED]"
                 >
                   <span>{sc.title}</span>
-                  <ArrowUpRight className="h-4 w-4 text-[#2563EB]" aria-hidden="true" />
+                  <ArrowUpRight className="h-4 w-4 text-[#EA580C]" aria-hidden="true" />
                 </Link>
               ))}
             </div>

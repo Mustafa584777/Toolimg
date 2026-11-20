@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowUpRight, Search, X } from 'lucide-react';
+import { ArrowRight, Search, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import {
   CORE_TOOLS,
@@ -11,6 +11,14 @@ import {
 import { ToolIcon } from '@/components/ToolIcon';
 
 type FilterTab = 'all' | SiloCategory;
+
+const ICON_ACCENTS: Record<SiloCategory, string> = {
+  compress: 'bg-[#FFF1F2] text-[#E11D48] border-[#FFE4E6]',
+  convert: 'bg-[#EFF6FF] text-[#2563EB] border-[#DBEAFE]',
+  'social-resize': 'bg-[#FAF5FF] text-[#7C3AED] border-[#F3E8FF]',
+  'privacy-dev': 'bg-[#ECFDF5] text-[#059669] border-[#D1FAE5]',
+  'ai-tools': 'bg-[#FFF7ED] text-[#EA580C] border-[#FED7AA]',
+};
 
 export function ToolDirectory() {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
@@ -49,23 +57,57 @@ export function ToolDirectory() {
   }, [activeTab, searchQuery]);
 
   return (
-    <section id="tools" className="bg-white py-14 sm:py-16 border-b border-[#E2E8F0]">
+    <section id="tools" className="border-b border-[#F3F4F6] bg-white py-14 sm:py-16">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Section Header + Search Bar */}
-        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
-              Core Image Tools Hub
-            </h2>
-            <p className="mt-1.5 text-sm text-[#475569] sm:text-base">
-              Pick a specialized browser utility below or jump straight to a
-              preset specification.
-            </p>
+        {/* Centered Editorial Heading */}
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="font-[family-name:var(--font-display)] text-2xl font-extrabold tracking-tight text-[#111827] sm:text-4xl">
+            <span className="mr-2 font-medium text-[#F97316]" aria-hidden="true">
+              &rsaquo;
+            </span>
+            Core Image{' '}
+            <span className="text-orange-gradient">Tools Hub</span>
+            <span className="ml-2 font-medium text-[#F97316]" aria-hidden="true">
+              &lsaquo;
+            </span>
+          </h2>
+          <p className="mt-2.5 text-sm text-[#6B7280] sm:text-base">
+            Pick a specialized browser utility below or jump straight to a
+            preset specification.
+          </p>
+        </div>
+
+        {/* Category Filter Tabs + Search Bar */}
+        <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div
+            role="tablist"
+            aria-label="Tool categories"
+            className="flex items-center gap-2 overflow-x-auto pb-1"
+          >
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`inline-flex min-h-[38px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] ${
+                    isActive
+                      ? 'btn-orange-gradient'
+                      : 'border border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74] hover:bg-[#FFF7ED]/50 hover:text-[#111827]'
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
 
-          <div className="relative w-full md:w-80">
+          <div className="relative w-full lg:w-72 shrink-0">
             <Search
-              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64748B]"
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF]"
               aria-hidden="true"
             />
             <input
@@ -74,14 +116,14 @@ export function ToolDirectory() {
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter tools (50KB, HEIC, EXIF, SVG)..."
               aria-label="Filter image tools"
-              className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-10 pr-9 text-sm text-[#0F172A] placeholder:text-[#94A3B8] transition-colors focus:border-[#2563EB] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15"
+              className="h-10 w-full rounded-xl border border-[#E5E7EB] bg-white pl-10 pr-9 text-sm text-[#111827] placeholder:text-[#9CA3AF] transition-colors focus:border-[#F97316] focus:outline-none focus:ring-2 focus:ring-[#F97316]/15"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
                 aria-label="Clear tool filter"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-1 text-[#64748B] hover:text-[#0F172A]"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-1 text-[#6B7280] hover:text-[#111827]"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
@@ -89,40 +131,13 @@ export function ToolDirectory() {
           </div>
         </div>
 
-        {/* Category Filter Tabs */}
-        <div
-          role="tablist"
-          aria-label="Tool categories"
-          className="mt-6 flex items-center gap-1.5 overflow-x-auto pb-1"
-        >
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => setActiveTab(tab.id)}
-                className={`inline-flex min-h-[38px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 py-2 text-xs font-medium transition-colors sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] ${
-                  isActive
-                    ? 'bg-[#0F172A] text-white shadow-2xs'
-                    : 'border border-[#E2E8F0] bg-[#F8FAFC] text-[#475569] hover:border-[#CBD5E1] hover:bg-white hover:text-[#0F172A]'
-                }`}
-              >
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* 10 Core Hub Tool Cards Grid */}
+        {/* Core Hub Tool Cards Grid */}
         {filteredTools.length === 0 ? (
-          <div className="mt-8 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-6 py-12 text-center">
-            <p className="text-sm font-medium text-[#0F172A]">
+          <div className="card-orange-sheen mt-8 rounded-2xl border border-[#E5E7EB] px-6 py-12 text-center">
+            <p className="text-sm font-semibold text-[#111827]">
               No tools match &ldquo;{searchQuery}&rdquo;
             </p>
-            <p className="mt-1 text-xs text-[#475569]">
+            <p className="mt-1 text-xs text-[#6B7280]">
               Try searching for KB compression, HEIC, EXIF, Discord, Passport, or
               Base64.
             </p>
@@ -132,62 +147,68 @@ export function ToolDirectory() {
                 setSearchQuery('');
                 setActiveTab('all');
               }}
-              className="mt-4 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-medium text-white hover:bg-[#1D4ED8]"
+              className="btn-orange-gradient mt-4 rounded-xl px-5 py-2 text-xs font-semibold"
             >
               Reset Filters
             </button>
           </div>
         ) : (
-          <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredTools.map((tool) => (
+          <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredTools.map((tool, index) => (
               <article
                 key={tool.id}
-                className="group flex flex-col justify-between rounded-xl border border-[#E2E8F0] bg-white p-5 transition-all duration-150 hover:-translate-y-0.5 hover:border-[#CBD5E1] hover:shadow-md"
+                className="card-orange-sheen group flex flex-col justify-between rounded-2xl border border-[#E5E7EB] p-5 shadow-[0_1px_3px_rgba(17,24,39,0.04)] transition-all duration-150 hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-[0_12px_28px_-10px_rgba(234,88,12,0.16)]"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <Link
                       href={tool.href}
                       aria-label={tool.title}
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[#2563EB] transition-colors group-hover:border-[#BFDBFE] group-hover:bg-[#EFF6FF]"
+                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-transform group-hover:scale-105 ${ICON_ACCENTS[tool.category]}`}
                     >
                       <ToolIcon name={tool.iconName} className="h-5 w-5" />
                     </Link>
 
-                    <Link
-                      href={tool.href}
-                      aria-label={`Open ${tool.title}`}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-[#94A3B8] transition-colors group-hover:bg-[#F8FAFC] group-hover:text-[#2563EB]"
-                    >
-                      <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                    </Link>
+                    <span className="font-mono text-xs font-semibold text-[#EA580C]/80 tabular-nums">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
                   </div>
 
-                  <h3 className="mt-4 font-[family-name:var(--font-display)] text-base font-semibold text-[#0F172A]">
+                  <h3 className="mt-4 font-[family-name:var(--font-display)] text-base font-bold text-[#111827]">
                     <Link
                       href={tool.href}
-                      className="hover:text-[#2563EB] focus-visible:outline-none focus-visible:underline"
+                      className="hover:text-[#EA580C] focus-visible:outline-none focus-visible:underline"
                     >
                       {tool.title}
                     </Link>
                   </h3>
 
-                  <p className="mt-1.5 text-sm leading-relaxed text-[#475569]">
+                  <p className="mt-1.5 text-sm leading-relaxed text-[#6B7280]">
                     {tool.benefit}
                   </p>
                 </div>
 
-                {/* Clickable Programmatic Preset Tags */}
-                <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-[#F1F5F9] pt-3.5">
-                  {tool.tags.map((tag) => (
-                    <Link
-                      key={`${tool.id}-${tag.label}`}
-                      href={tag.href}
-                      className="inline-flex items-center whitespace-nowrap rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-2.5 py-1 text-xs font-medium text-[#475569] transition-colors hover:border-[#2563EB]/40 hover:bg-[#EFF6FF] hover:text-[#1D4ED8]"
-                    >
-                      {tag.label}
-                    </Link>
-                  ))}
+                <div className="mt-4 space-y-3 border-t border-[#F3F4F6] pt-3.5">
+                  {/* Clickable Programmatic Preset Tags */}
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {tool.tags.map((tag) => (
+                      <Link
+                        key={`${tool.id}-${tag.label}`}
+                        href={tag.href}
+                        className="inline-flex items-center whitespace-nowrap rounded-lg border border-[#E5E7EB] bg-white px-2.5 py-1 text-xs font-medium text-[#4B5563] transition-colors hover:border-[#FB923C] hover:bg-[#FFF7ED] hover:text-[#C2410C]"
+                      >
+                        {tag.label}
+                      </Link>
+                    ))}
+                  </div>
+
+                  <Link
+                    href={tool.href}
+                    className="btn-orange-gradient inline-flex w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold transition-all"
+                  >
+                    <span>Explore {tool.title}</span>
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </Link>
                 </div>
               </article>
             ))}

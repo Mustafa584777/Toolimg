@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Search, ShieldCheck, X } from 'lucide-react';
+import { Menu, Search, X } from 'lucide-react';
 import { useState } from 'react';
 import { SILO_PILLARS } from '@/lib/tools-data';
 import { useImageSession } from '@/components/ImageSessionProvider';
@@ -14,12 +14,12 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[#E2E8F0] bg-[#FFFFFF]/92 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:gap-8">
+    <header className="sticky top-0 z-40 border-b border-[#F3F4F6] bg-white/92 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:gap-8">
         {/* Zone 1: Brand Mark + Wordmark */}
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2.5 whitespace-nowrap text-[#0F172A] transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 rounded-md"
+          className="flex shrink-0 items-center gap-2.5 whitespace-nowrap rounded-lg text-[#111827] transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
         >
           <Image
             src="/logo.png"
@@ -35,11 +35,19 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Zone 2: 4 Silo Pillar Navigation Links */}
+        {/* Zone 2: Clean Centered Navigation Links */}
         <nav
           aria-label="Primary Silo Navigation"
-          className="hidden md:flex items-center gap-6 text-sm font-medium text-[#475569]"
+          className="hidden md:flex items-center gap-6 text-sm font-medium text-[#4B5563]"
         >
+          <Link
+            href="/"
+            className={`whitespace-nowrap shrink-0 py-1 transition-colors hover:text-[#EA580C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] rounded-sm ${
+              pathname === '/' ? 'font-semibold text-[#111827]' : ''
+            }`}
+          >
+            Home
+          </Link>
           {SILO_PILLARS.map((pillar) => {
             const isActive =
               pathname === pillar.href || pathname.startsWith(`${pillar.href}/`);
@@ -47,9 +55,9 @@ export function Navbar() {
               <Link
                 key={pillar.id}
                 href={pillar.href}
-                className={`whitespace-nowrap shrink-0 py-1 transition-colors hover:text-[#0F172A] hover:underline hover:decoration-[#2563EB]/60 hover:underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] rounded-sm ${
+                className={`whitespace-nowrap shrink-0 py-1 transition-colors hover:text-[#EA580C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] rounded-sm ${
                   isActive
-                    ? 'text-[#0F172A] underline decoration-[#2563EB] underline-offset-4'
+                    ? 'font-semibold text-[#EA580C] underline decoration-[#F97316] decoration-2 underline-offset-8'
                     : ''
                 }`}
               >
@@ -57,34 +65,46 @@ export function Navbar() {
               </Link>
             );
           })}
+          <Link
+            href="/tools/image-to-code"
+            className={`whitespace-nowrap shrink-0 py-1 transition-colors hover:text-[#EA580C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] rounded-sm ${
+              pathname.startsWith('/tools/')
+                ? 'font-semibold text-[#EA580C] underline decoration-[#F97316] decoration-2 underline-offset-8'
+                : ''
+            }`}
+          >
+            AI &amp; OCR Tools
+          </Link>
         </nav>
 
-        {/* Zone 3: Emerald Trust Badge + Quick Search (⌘K) */}
+        {/* Zone 3: Quick Search + Primary Orange Gradient CTA */}
         <div className="flex shrink-0 items-center gap-2.5">
-          <span className="hidden lg:inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-[#ECFDF5] px-3 py-1 text-xs font-medium text-[#059669] border border-[#059669]/15">
-            <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            <span>100% Client-Side · Zero Uploads</span>
-          </span>
-
           <button
             type="button"
             onClick={() => setIsSearchOpen(true)}
             aria-label="Open quick tool search (Command+K or slash)"
-            className="inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 text-xs font-medium text-[#475569] transition-colors hover:border-[#CBD5E1] hover:bg-white hover:text-[#0F172A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]"
+            className="inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border border-[#E5E7EB] bg-white px-3 text-xs font-medium text-[#4B5563] shadow-[0_1px_2px_rgba(17,24,39,0.03)] transition-colors hover:border-[#FDBA74] hover:text-[#111827] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316]"
           >
-            <Search className="h-3.5 w-3.5 shrink-0 text-[#64748B]" aria-hidden="true" />
-            <span className="hidden sm:inline">Search tools</span>
-            <kbd className="hidden sm:inline-flex items-center rounded border border-[#E2E8F0] bg-white px-1.5 py-0.5 font-mono text-[11px] font-medium text-[#64748B]">
+            <Search className="h-3.5 w-3.5 shrink-0 text-[#6B7280]" aria-hidden="true" />
+            <span className="hidden sm:inline">Search</span>
+            <kbd className="hidden sm:inline-flex items-center rounded-md border border-[#E5E7EB] bg-[#F9FAFB] px-1.5 py-0.5 font-mono text-[10px] font-medium text-[#6B7280]">
               ⌘K
             </kbd>
           </button>
+
+          <Link
+            href="/#tools"
+            className="btn-orange-gradient hidden sm:inline-flex h-9 items-center justify-center rounded-xl px-4 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
+          >
+            Browse Tools
+          </Link>
 
           <button
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#E2E8F0] bg-white text-[#0F172A] md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#E5E7EB] bg-white text-[#111827] md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316]"
           >
             {mobileMenuOpen ? (
               <X className="h-4 w-4" aria-hidden="true" />
@@ -97,22 +117,32 @@ export function Navbar() {
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="border-t border-[#E2E8F0] bg-white px-4 py-3 md:hidden">
-          <div className="mb-2.5 inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF5] px-2.5 py-1 text-xs font-medium text-[#059669]">
-            <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            <span>100% Client-Side · Zero Uploads</span>
-          </div>
-          <nav aria-label="Mobile Silo Navigation" className="grid grid-cols-2 gap-2">
+        <div className="border-t border-[#F3F4F6] bg-white px-4 py-4 md:hidden">
+          <nav aria-label="Mobile Silo Navigation" className="grid grid-cols-2 gap-2.5">
             {SILO_PILLARS.map((pillar) => (
               <Link
                 key={pillar.id}
                 href={pillar.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex min-h-[44px] items-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-3 text-sm font-medium text-[#0F172A] transition-colors hover:border-[#2563EB]/40 hover:bg-white"
+                className="flex min-h-[44px] items-center rounded-xl border border-[#E5E7EB] bg-white px-3 text-sm font-medium text-[#111827] transition-colors hover:border-[#FDBA74] hover:bg-[#FFF7ED]"
               >
                 {pillar.name}
               </Link>
             ))}
+            <Link
+              href="/tools/image-to-code"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex min-h-[44px] items-center rounded-xl border border-[#E5E7EB] bg-white px-3 text-sm font-medium text-[#111827] transition-colors hover:border-[#FDBA74] hover:bg-[#FFF7ED]"
+            >
+              AI &amp; OCR Tools
+            </Link>
+            <Link
+              href="/#tools"
+              onClick={() => setMobileMenuOpen(false)}
+              className="btn-orange-gradient flex min-h-[44px] items-center justify-center rounded-xl px-3 text-sm font-semibold"
+            >
+              Browse All Tools
+            </Link>
           </nav>
         </div>
       )}
