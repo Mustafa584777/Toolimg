@@ -33,11 +33,15 @@ export function Footer() {
               />
               <span>toolimg.online</span>
             </Link>
+            <div className="mt-2.5 flex items-center gap-1.5 text-xs font-medium text-[#C2410C]">
+              <ShieldCheck className="h-4 w-4 shrink-0 text-[#C2410C]" aria-hidden="true" />
+              <span>100% Client-Side Privacy</span>
+            </div>
             <p className="mt-3 text-xs leading-relaxed text-[#6B7280]">
               Fast, private image compression, format conversion, OCR, HTML
               rendering, and exact-spec resizing in your browser.
             </p>
-            <div className="mt-4 flex flex-wrap items-center gap-2">
+            <div className="mt-4">
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-1.5 rounded-xl border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.03)] transition-colors hover:border-[#FDBA74] hover:text-[#EA580C]"
@@ -45,10 +49,6 @@ export function Footer() {
                 <MessageSquare className="h-3.5 w-3.5 text-[#F97316]" aria-hidden="true" />
                 <span>Support</span>
               </Link>
-              <span className="inline-flex items-center gap-1.5 rounded-xl bg-[#ECFDF5] px-2.5 py-1.5 text-xs font-medium text-[#059669]">
-                <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Privacy-First</span>
-              </span>
             </div>
           </div>
 

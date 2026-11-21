@@ -249,68 +249,10 @@ export function HeroDropzone() {
             free forever.
           </p>
 
-          {/* Hero Dual CTA */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="#tools"
-              className="btn-orange-gradient inline-flex min-h-[44px] items-center gap-2 rounded-xl px-6 py-2.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
-            >
-              <span>Browse Tools</span>
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-5 py-2.5 text-sm font-semibold text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.04)] transition-colors hover:border-[#FDBA74] hover:bg-[#FFF7ED]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
-            >
-              <ImagePlus className="h-4 w-4 text-[#EA580C]" aria-hidden="true" />
-              <span>Open Image File</span>
-            </button>
-          </div>
-
-          {/* 4-Item Inline Feature Strip */}
-          <div className="mx-auto mt-7 grid max-w-3xl grid-cols-2 gap-3 text-left sm:grid-cols-4 sm:gap-4">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FFF7ED] text-[#EA580C]">
-                <Zap className="h-4 w-4" aria-hidden="true" />
-              </span>
-              <div>
-                <p className="text-xs font-semibold text-[#111827]">Fast &amp; Reliable</p>
-                <p className="text-[11px] text-[#6B7280]">Results in milliseconds</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#ECFDF5] text-[#059669]">
-                <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-              </span>
-              <div>
-                <p className="text-xs font-semibold text-[#111827]">Zero Uploads</p>
-                <p className="text-[11px] text-[#6B7280]">Private on your device</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EFF6FF] text-[#2563EB]">
-                <InfinityIcon className="h-4 w-4" aria-hidden="true" />
-              </span>
-              <div>
-                <p className="text-xs font-semibold text-[#111827]">Free &amp; Unlimited</p>
-                <p className="text-[11px] text-[#6B7280]">No watermarks or caps</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#FAF5FF] text-[#7C3AED]">
-                <Lock className="h-4 w-4" aria-hidden="true" />
-              </span>
-              <div>
-                <p className="text-xs font-semibold text-[#111827]">Exact Specs</p>
-                <p className="text-[11px] text-[#6B7280]">KB, DPI &amp; social sizes</p>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Interactive Quick-Start Smart Dropzone */}
-        <div className="mx-auto mt-8 max-w-4xl">
+        <div className="mx-auto mt-7 max-w-4xl">
           <div
             onDragOver={(e) => {
               e.preventDefault();
@@ -335,8 +277,8 @@ export function HeroDropzone() {
 
             {!inspected ? (
               <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#D1D5DB] bg-[#FAFAFA]/70 px-4 py-8 text-center sm:py-10">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#FED7AA] bg-[#FFF7ED] text-[#EA580C]">
-                  <UploadCloud className="h-6 w-6" aria-hidden="true" />
+                <div className="flex items-center justify-center text-[#EA580C]">
+                  <UploadCloud className="h-8 w-8" aria-hidden="true" />
                 </div>
 
                 <h2 className="mt-4 font-[family-name:var(--font-display)] text-base font-semibold text-[#111827] sm:text-lg">
@@ -435,7 +377,7 @@ export function HeroDropzone() {
                       type="button"
                       onClick={handleClear}
                       aria-label="Clear selected image"
-                      className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#E5E7EB] text-[#6B7280] transition-colors hover:bg-[#FFF7ED] hover:text-[#111827]"
+                      className="inline-flex h-8 w-8 shrink-0 items-center justify-center text-[#EA580C] transition-colors hover:text-[#C2410C]"
                     >
                       <X className="h-4 w-4" aria-hidden="true" />
                     </button>
@@ -475,6 +417,46 @@ export function HeroDropzone() {
                 </div>
               </div>
             )}
+          </div>
+
+          {/* 4-Item Inline Feature Strip */}
+          <div className="mx-auto mt-7 grid max-w-3xl grid-cols-2 gap-3 text-left sm:grid-cols-4 sm:gap-4">
+            <div className="flex items-center gap-2.5">
+              <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
+                <Zap className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-[#111827]">Fast &amp; Reliable</p>
+                <p className="text-[11px] text-[#6B7280]">Results in milliseconds</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
+                <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-[#111827]">Zero Uploads</p>
+                <p className="text-[11px] text-[#6B7280]">Private on your device</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
+                <InfinityIcon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-[#111827]">Free &amp; Unlimited</p>
+                <p className="text-[11px] text-[#6B7280]">No watermarks or caps</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
+                <Lock className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-xs font-semibold text-[#111827]">Exact Specs</p>
+                <p className="text-[11px] text-[#6B7280]">KB, DPI &amp; social sizes</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

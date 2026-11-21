@@ -12,14 +12,6 @@ import { ToolIcon } from '@/components/ToolIcon';
 
 type FilterTab = 'all' | SiloCategory;
 
-const ICON_ACCENTS: Record<SiloCategory, string> = {
-  compress: 'bg-[#FFF1F2] text-[#E11D48] border-[#FFE4E6]',
-  convert: 'bg-[#EFF6FF] text-[#2563EB] border-[#DBEAFE]',
-  'social-resize': 'bg-[#FAF5FF] text-[#7C3AED] border-[#F3E8FF]',
-  'privacy-dev': 'bg-[#ECFDF5] text-[#059669] border-[#D1FAE5]',
-  'ai-tools': 'bg-[#FFF7ED] text-[#EA580C] border-[#FED7AA]',
-};
-
 export function ToolDirectory() {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -107,7 +99,7 @@ export function ToolDirectory() {
 
           <div className="relative w-full lg:w-72 shrink-0">
             <Search
-              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#9CA3AF]"
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#F97316]"
               aria-hidden="true"
             />
             <input
@@ -123,7 +115,7 @@ export function ToolDirectory() {
                 type="button"
                 onClick={() => setSearchQuery('')}
                 aria-label="Clear tool filter"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-1 text-[#6B7280] hover:text-[#111827]"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-1 text-[#F97316] hover:text-[#EA580C]"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
@@ -161,29 +153,25 @@ export function ToolDirectory() {
               >
                 <div>
                   <div className="flex items-start justify-between gap-3">
-                    <Link
-                      href={tool.href}
-                      aria-label={tool.title}
-                      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-transform group-hover:scale-105 ${ICON_ACCENTS[tool.category]}`}
-                    >
-                      <ToolIcon name={tool.iconName} className="h-5 w-5" />
-                    </Link>
+                    <h3 className="font-[family-name:var(--font-display)] text-base font-bold text-[#111827]">
+                      <Link
+                        href={tool.href}
+                        className="inline-flex items-center gap-2.5 hover:text-[#EA580C] focus-visible:outline-none focus-visible:underline"
+                      >
+                        <ToolIcon
+                          name={tool.iconName}
+                          className="h-5 w-5 shrink-0 text-[#EA580C] transition-transform group-hover:scale-110"
+                        />
+                        <span>{tool.title}</span>
+                      </Link>
+                    </h3>
 
-                    <span className="font-mono text-xs font-semibold text-[#EA580C]/80 tabular-nums">
+                    <span className="mt-0.5 shrink-0 font-mono text-xs font-semibold text-[#EA580C]/80 tabular-nums">
                       {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
 
-                  <h3 className="mt-4 font-[family-name:var(--font-display)] text-base font-bold text-[#111827]">
-                    <Link
-                      href={tool.href}
-                      className="hover:text-[#EA580C] focus-visible:outline-none focus-visible:underline"
-                    >
-                      {tool.title}
-                    </Link>
-                  </h3>
-
-                  <p className="mt-1.5 text-sm leading-relaxed text-[#6B7280]">
+                  <p className="mt-2 text-sm leading-relaxed text-[#6B7280]">
                     {tool.benefit}
                   </p>
                 </div>

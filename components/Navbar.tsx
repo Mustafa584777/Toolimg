@@ -85,7 +85,7 @@ export function Navbar() {
             aria-label="Open quick tool search (Command+K or slash)"
             className="inline-flex h-9 shrink-0 items-center gap-2 whitespace-nowrap rounded-xl border border-[#E5E7EB] bg-white px-3 text-xs font-medium text-[#4B5563] shadow-[0_1px_2px_rgba(17,24,39,0.03)] transition-colors hover:border-[#FDBA74] hover:text-[#111827] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316]"
           >
-            <Search className="h-3.5 w-3.5 shrink-0 text-[#6B7280]" aria-hidden="true" />
+            <Search className="h-3.5 w-3.5 shrink-0 text-[#F97316]" aria-hidden="true" />
             <span className="hidden sm:inline">Search</span>
             <kbd className="hidden sm:inline-flex items-center rounded-md border border-[#E5E7EB] bg-[#F9FAFB] px-1.5 py-0.5 font-mono text-[10px] font-medium text-[#6B7280]">
               ⌘K
@@ -104,7 +104,7 @@ export function Navbar() {
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#E5E7EB] bg-white text-[#111827] md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316]"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[#E5E7EB] bg-white text-[#EA580C] md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316]"
           >
             {mobileMenuOpen ? (
               <X className="h-4 w-4" aria-hidden="true" />

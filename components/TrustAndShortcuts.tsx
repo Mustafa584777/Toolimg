@@ -110,8 +110,8 @@ export function TrustAndShortcuts() {
                       </td>
                       <td className="bg-[#FFF7ED]/70 px-5 py-3.5 font-semibold text-[#111827]">
                         {typeof row.ours === 'boolean' ? (
-                          <span className="inline-flex items-center gap-1.5 text-[#059669]">
-                            <Check className="h-4 w-4" aria-hidden="true" />
+                          <span className="inline-flex items-center gap-1.5 text-[#EA580C]">
+                            <Check className="h-4 w-4 text-[#EA580C]" aria-hidden="true" />
                             <span>Included</span>
                           </span>
                         ) : (

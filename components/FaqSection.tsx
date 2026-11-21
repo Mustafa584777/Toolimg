@@ -30,7 +30,7 @@ export function FaqSection() {
                   {item.question}
                 </span>
                 <ChevronDown
-                  className="h-4 w-4 shrink-0 text-[#6B7280] transition-transform duration-150 group-open:rotate-180 group-open:text-[#EA580C]"
+                  className="h-4 w-4 shrink-0 text-[#F97316] transition-transform duration-150 group-open:rotate-180 group-open:text-[#EA580C]"
                   aria-hidden="true"
                 />
               </summary>
