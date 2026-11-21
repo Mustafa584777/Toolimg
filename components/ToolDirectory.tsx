@@ -88,7 +88,7 @@ export function ToolDirectory() {
                   className={`inline-flex min-h-[38px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] ${
                     isActive
                       ? 'btn-orange-gradient'
-                      : 'border border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74] hover:bg-[#FFF7ED]/50 hover:text-[#111827]'
+                      : 'bg-[#F9FAFB] text-[#4B5563] hover:bg-[#FFF7ED] hover:text-[#EA580C]'
                   }`}
                 >
                   <span>{tab.label}</span>
@@ -183,7 +183,7 @@ export function ToolDirectory() {
                       <Link
                         key={`${tool.id}-${tag.label}`}
                         href={tag.href}
-                        className="inline-flex items-center whitespace-nowrap rounded-lg border border-[#E5E7EB] bg-white px-2.5 py-1 text-xs font-medium text-[#4B5563] transition-colors hover:border-[#FB923C] hover:bg-[#FFF7ED] hover:text-[#C2410C]"
+                        className="inline-flex items-center whitespace-nowrap rounded-lg bg-[#F9FAFB] px-2.5 py-1 text-xs font-medium text-[#4B5563] transition-colors hover:bg-[#FFF7ED] hover:text-[#C2410C]"
                       >
                         {tag.label}
                       </Link>

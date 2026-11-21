@@ -21,6 +21,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  html.dark,
+  html.dark body {
+    background-color: #0B0F19;
+    color: #F9FAFB;
+  }
 }
 
 .hero-orange-glow {
@@ -51,6 +57,67 @@
     rgba(255, 247, 237, 0.2) 50%,
     rgba(255, 255, 255, 0) 80%
   );
+}
+
+html.dark .hero-orange-glow {
+  background-color: #0B0F19;
+  background-image: radial-gradient(
+    ellipse 80% 48% at 50% -6%,
+    rgba(234, 88, 12, 0.2),
+    rgba(249, 115, 22, 0.08) 48%,
+    rgba(11, 15, 25, 0) 78%
+  );
+}
+
+html.dark .card-orange-sheen {
+  background-color: #111827;
+  background-image: radial-gradient(
+    circle at top right,
+    rgba(249, 115, 22, 0.16),
+    rgba(234, 88, 12, 0.05) 38%,
+    rgba(17, 24, 39, 0) 70%
+  );
+  border-color: #1F2937;
+}
+
+html.dark .footer-orange-glow {
+  background-color: #0B0F19;
+  background-image: radial-gradient(
+    ellipse 70% 55% at 50% 0%,
+    rgba(234, 88, 12, 0.16),
+    rgba(249, 115, 22, 0.05) 50%,
+    rgba(11, 15, 25, 0) 80%
+  );
+  border-color: #1F2937;
+}
+
+html.dark header,
+html.dark section,
+html.dark footer {
+  border-color: #1F2937;
+}
+
+html.dark .bg-white {
+  background-color: #111827;
+}
+
+html.dark .bg-white\/92 {
+  background-color: rgba(11, 15, 25, 0.92);
+}
+
+html.dark .text-\[\#111827\] {
+  color: #F9FAFB;
+}
+
+html.dark .text-\[\#374151\],
+html.dark .text-\[\#4B5563\],
+html.dark .text-\[\#6B7280\] {
+  color: #D1D5DB;
+}
+
+html.dark .border-\[\#E5E7EB\],
+html.dark .border-\[\#F3F4F6\] {
+  border-color: #1F2937;
 }
 
 .text-orange-gradient {

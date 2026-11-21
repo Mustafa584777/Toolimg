@@ -208,7 +208,7 @@ export function HeroDropzone() {
           {/* Subtle top pill link */}
           <Link
             href="#tools"
-            className="inline-flex items-center gap-2 rounded-full border border-[#E5E7EB] bg-white px-3.5 py-1.5 text-xs font-medium text-[#374151] shadow-[0_1px_3px_rgba(17,24,39,0.04)] transition-colors hover:border-[#FDBA74]"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-xs font-medium text-[#374151] shadow-[0_2px_10px_rgba(17,24,39,0.06)] transition-colors hover:bg-[#FFF7ED]/60"
           >
             <Sparkles className="h-3.5 w-3.5 text-[#F97316]" aria-hidden="true" />
             <span>100% Browser-Based</span>
@@ -311,7 +311,7 @@ export function HeroDropzone() {
                     type="button"
                     onClick={handleTrySample}
                     disabled={isInspecting}
-                    className="inline-flex min-h-[42px] items-center gap-2 whitespace-nowrap rounded-xl border border-[#E5E7EB] bg-white px-4 py-2.5 text-sm font-semibold text-[#111827] transition-colors hover:border-[#FDBA74] hover:bg-[#FFF7ED]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2 disabled:opacity-60"
+                    className="inline-flex min-h-[42px] items-center gap-2 whitespace-nowrap rounded-xl bg-[#F9FAFB] px-4 py-2.5 text-sm font-semibold text-[#111827] transition-colors hover:bg-[#FFF7ED] hover:text-[#C2410C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2 disabled:opacity-60"
                   >
                     <Sparkles className="h-4 w-4 shrink-0 text-[#F97316]" aria-hidden="true" />
                     <span>Try Sample Image</span>
@@ -396,7 +396,7 @@ export function HeroDropzone() {
                         className={`inline-flex min-h-[38px] items-center gap-1.5 whitespace-nowrap rounded-xl px-3.5 py-2 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] ${
                           action.primary
                             ? 'btn-orange-gradient'
-                            : 'border border-[#E5E7EB] bg-white text-[#111827] hover:border-[#FDBA74] hover:bg-[#FFF7ED] hover:text-[#C2410C]'
+                            : 'bg-[#F9FAFB] text-[#111827] hover:bg-[#FFF7ED] hover:text-[#C2410C]'
                         }`}
                       >
                         <span>{action.label}</span>

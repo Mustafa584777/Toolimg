@@ -44,7 +44,7 @@ export function Footer() {
             <div className="mt-4">
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-[#111827] shadow-[0_1px_2px_rgba(17,24,39,0.03)] transition-colors hover:border-[#FDBA74] hover:text-[#EA580C]"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#F9FAFB] px-3 py-1.5 text-xs font-medium text-[#111827] transition-colors hover:bg-[#FFF7ED] hover:text-[#EA580C]"
               >
                 <MessageSquare className="h-3.5 w-3.5 text-[#F97316]" aria-hidden="true" />
                 <span>Support</span>
