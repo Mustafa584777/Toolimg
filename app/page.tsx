@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { HeroDropzone } from '@/components/HeroDropzone';
 import { ToolDirectory } from '@/components/ToolDirectory';
+import { UpcomingImageTools } from '@/components/UpcomingImageTools';
 import { TrustAndShortcuts } from '@/components/TrustAndShortcuts';
 import { FaqSection } from '@/components/FaqSection';
 
@@ -18,6 +19,7 @@ export default function HomePage() {
     <>
       <HeroDropzone />
       <ToolDirectory />
+      <UpcomingImageTools />
       <TrustAndShortcuts />
       <FaqSection />
     </>

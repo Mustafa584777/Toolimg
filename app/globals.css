@@ -121,6 +121,20 @@ html.dark .border-\[\#F3F4F6\] {
   border-color: #1F2937;
 }
 
+html.dark .upcoming-grey-card {
+  background-color: #161B26;
+  border-color: #262D3D;
+}
+
+html.dark .upcoming-grey-overlay {
+  background-color: rgba(17, 24, 39, 0.58);
+}
+
+html.dark .upcoming-grey-badge {
+  background-color: #1F2937;
+  color: #9CA3AF;
+}
+
 .text-orange-gradient {
   background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
   -webkit-background-clip: text;
