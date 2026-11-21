@@ -20,7 +20,6 @@ import {
   Monitor,
   Palette,
   Printer,
-  RefreshCcw,
   RotateCw,
   ScanEye,
   Scissors,
@@ -53,11 +52,6 @@ const UPCOMING_IMAGE_TOOLS: UpcomingToolItem[] = [
     title: 'Bulk Image Resizer',
     description: 'Resize multiple photos by exact pixels or percentage scale at once.',
     Icon: Maximize2,
-  },
-  {
-    title: 'PNG to JPG Converter',
-    description: 'Convert transparent PNG graphics into compact JPG with custom backdrop.',
-    Icon: RefreshCcw,
   },
   {
     title: 'WebP to JPG & PNG Converter',

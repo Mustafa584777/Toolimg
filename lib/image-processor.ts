@@ -280,7 +280,8 @@ export async function convertImageFormat(
   file: File,
   outputFormat: 'image/jpeg' | 'image/png' | 'image/webp',
   targetWidth?: number,
-  quality = 0.92
+  quality = 0.92,
+  backgroundColor = '#FFFFFF'
 ): Promise<{ blob: Blob; width: number; height: number }> {
   const url = URL.createObjectURL(file);
   try {
@@ -297,7 +298,7 @@ export async function convertImageFormat(
     if (!ctx) throw new Error('Canvas unavailable');
 
     if (outputFormat === 'image/jpeg') {
-      ctx.fillStyle = '#FFFFFF';
+      ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, width, height);
     }
     ctx.drawImage(img, 0, 0, width, height);

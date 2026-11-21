@@ -157,10 +157,17 @@ export function HeroDropzone() {
         href: '/convert/svg-to-png?format=webp',
       });
     } else {
+      if (img.formatLabel === 'PNG') {
+        actions.push({
+          label: 'Convert PNG to JPG',
+          href: '/convert/png-to-jpg',
+          primary: true,
+        });
+      }
       actions.push({
         label: 'Compress to 50KB',
         href: '/compress/compress-image-to-50kb',
-        primary: true,
+        primary: img.formatLabel !== 'PNG',
       });
       actions.push({
         label: 'Compress to 20KB',

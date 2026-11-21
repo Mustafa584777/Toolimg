@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { ExternalLink, Search, X } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Clock, ExternalLink, Search, X } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   CORE_TOOLS,
   SILO_PILLARS,
@@ -11,6 +11,56 @@ import {
 import { ToolIcon } from '@/components/ToolIcon';
 
 type FilterTab = 'all' | SiloCategory;
+
+function formatElapsedLaunch(launchedAt: string, nowMs: number): {
+  hoursLabel: string;
+  timerText: string;
+} {
+  const startMs = Date.parse(launchedAt);
+  const diffSec = Math.max(0, Math.floor((nowMs - startMs) / 1000));
+  const hours = Math.floor(diffSec / 3600);
+  const mins = Math.floor((diffSec % 3600) / 60);
+  const secs = diffSec % 60;
+  const hh = String(hours).padStart(2, '0');
+  const mm = String(mins).padStart(2, '0');
+  const ss = String(secs).padStart(2, '0');
+  const hoursLabel =
+    hours >= 1
+      ? `Launched ${hours} ${hours === 1 ? 'hour' : 'hours'} ago`
+      : `Launched ${mins}m ago`;
+  return { hoursLabel, timerText: `${hh}:${mm}:${ss}` };
+}
+
+function LaunchedTimerBadge({ launchedAt }: { launchedAt: string }) {
+  const [nowMs, setNowMs] = useState<number | null>(null);
+
+  useEffect(() => {
+    const update = () => setNowMs(Date.now());
+    const initialTimer = setTimeout(update, 0);
+    const intervalId = setInterval(update, 1000);
+    return () => {
+      clearTimeout(initialTimer);
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  const elapsed = nowMs !== null ? formatElapsedLaunch(launchedAt, nowMs) : null;
+
+  return (
+    <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg bg-[#FFF7ED] px-2.5 py-1 text-[11px] font-semibold text-[#C2410C]">
+      <span className="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#F97316] opacity-75" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-[#EA580C]" />
+      </span>
+      <Clock className="h-3 w-3 shrink-0 text-[#EA580C]" aria-hidden="true" />
+      <span>{elapsed ? elapsed.hoursLabel : 'Launched 2 hours ago'}</span>
+      <span aria-hidden="true">&middot;</span>
+      <span className="font-mono tabular-nums text-[#EA580C]">
+        {elapsed ? elapsed.timerText : '02:00:00'}
+      </span>
+    </div>
+  );
+}
 
 export function ToolDirectory() {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
@@ -170,6 +220,10 @@ export function ToolDirectory() {
                       {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
+
+                  {tool.launchedAt && (
+                    <LaunchedTimerBadge launchedAt={tool.launchedAt} />
+                  )}
 
                   <p className="mt-2 text-sm leading-relaxed text-[#6B7280]">
                     {tool.benefit}

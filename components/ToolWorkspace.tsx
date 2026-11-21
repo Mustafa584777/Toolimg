@@ -80,6 +80,8 @@ export function ToolWorkspace({
   const [outputFormat, setOutputFormat] = useState<
     'image/jpeg' | 'image/png' | 'image/webp'
   >(preset?.outputFormat ?? 'image/jpeg');
+  const [jpgBackground, setJpgBackground] = useState<'#FFFFFF' | '#000000' | '#F3F4F6'>('#FFFFFF');
+  const [jpgQuality, setJpgQuality] = useState<number>(0.92);
   const [gridCols, setGridCols] = useState<number>(preset?.gridCols ?? 3);
   const [gridRows, setGridRows] = useState<number>(preset?.gridRows ?? 3);
   const [discordMode, setDiscordMode] = useState<'emoji' | 'banner'>('emoji');
@@ -280,7 +282,13 @@ export function ToolWorkspace({
           note: `Quality ${res.qualityUsed}% · Target <= ${targetKb}KB`,
         });
       } else if (mode === 'convert-format' && sourceImage) {
-        const res = await convertImageFormat(sourceImage.file, outputFormat);
+        const res = await convertImageFormat(
+          sourceImage.file,
+          outputFormat,
+          undefined,
+          outputFormat === 'image/jpeg' ? jpgQuality : 0.92,
+          jpgBackground
+        );
         const url = URL.createObjectURL(res.blob);
         const ext =
           outputFormat === 'image/png'
@@ -294,6 +302,16 @@ export function ToolWorkspace({
           width: res.width,
           height: res.height,
           ext,
+          note:
+            outputFormat === 'image/jpeg'
+              ? `Quality ${Math.round(jpgQuality * 100)}% · Backdrop ${
+                  jpgBackground === '#FFFFFF'
+                    ? 'White'
+                    : jpgBackground === '#000000'
+                    ? 'Black'
+                    : 'Light Gray'
+                }`
+              : undefined,
         });
       } else if (mode === 'svg-to-png' && sourceImage) {
         const fmt = outputFormat === 'image/webp' ? 'image/webp' : 'image/png';
@@ -536,6 +554,61 @@ export function ToolWorkspace({
                     </button>
                   );
                 })}
+                {outputFormat === 'image/jpeg' && (
+                  <>
+                    <span className="ml-1 text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                      Backdrop:
+                    </span>
+                    {(
+                      [
+                        { hex: '#FFFFFF', label: 'White' },
+                        { hex: '#000000', label: 'Black' },
+                        { hex: '#F3F4F6', label: 'Gray' },
+                      ] as const
+                    ).map((bg) => {
+                      const active = jpgBackground === bg.hex;
+                      return (
+                        <button
+                          key={bg.hex}
+                          type="button"
+                          onClick={() => setJpgBackground(bg.hex)}
+                          className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all ${
+                            active
+                              ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                              : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
+                          }`}
+                        >
+                          <span
+                            className="h-3 w-3 rounded-full border border-[#D1D5DB]"
+                            style={{ backgroundColor: bg.hex }}
+                            aria-hidden="true"
+                          />
+                          <span>{bg.label}</span>
+                        </button>
+                      );
+                    })}
+                    <span className="ml-1 text-[11px] font-semibold uppercase tracking-wider text-[#9CA3AF]">
+                      Quality:
+                    </span>
+                    {[0.85, 0.92, 1].map((q) => {
+                      const active = jpgQuality === q;
+                      return (
+                        <button
+                          key={q}
+                          type="button"
+                          onClick={() => setJpgQuality(q)}
+                          className={`inline-flex items-center gap-1 rounded-xl border px-2.5 py-1.5 font-mono text-xs font-semibold tabular-nums transition-all ${
+                            active
+                              ? 'border-[#F97316] bg-[#FFF7ED] text-[#C2410C]'
+                              : 'border-[#E5E7EB] bg-white text-[#4B5563] hover:border-[#FDBA74]'
+                          }`}
+                        >
+                          {Math.round(q * 100)}%
+                        </button>
+                      );
+                    })}
+                  </>
+                )}
               </>
             )}
 

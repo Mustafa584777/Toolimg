@@ -60,6 +60,7 @@ export interface HubTool {
     | 'Wand2';
   tags: ProgrammaticTag[];
   mode: ToolMode;
+  launchedAt?: string;
   defaultPreset?: {
     targetKb?: number;
     outputFormat?: 'image/jpeg' | 'image/png' | 'image/webp';
@@ -209,6 +210,22 @@ export const CORE_TOOLS: HubTool[] = [
       { label: '20KB', href: '/compress-image-to-20kb' },
       { label: '50KB', href: '/compress/compress-image-to-50kb' },
       { label: '100KB', href: '/compress-image-to-100kb' },
+    ],
+  },
+  {
+    id: 'png-to-jpg',
+    title: 'PNG to JPG Converter',
+    benefit: 'Convert transparent PNG graphics into lightweight JPG files with custom backdrops.',
+    href: '/convert/png-to-jpg',
+    category: 'convert',
+    iconName: 'RefreshCw',
+    mode: 'convert-format',
+    launchedAt: '2026-11-21T01:54:00-08:00',
+    defaultPreset: { outputFormat: 'image/jpeg' },
+    tags: [
+      { label: 'PNG to JPG', href: '/convert/png-to-jpg' },
+      { label: 'Custom Fill', href: '/convert/png-to-jpg' },
+      { label: 'Smaller Size', href: '/convert/png-to-jpg' },
     ],
   },
   {
@@ -498,6 +515,7 @@ export const SILO_SHORTCUT_GROUPS: {
     title: 'Format & HTML',
     href: '/convert',
     links: [
+      { label: 'PNG to JPG Converter', href: '/convert/png-to-jpg' },
       { label: 'HEIC to JPG Converter', href: '/convert/heic-to-jpg' },
       { label: 'HEIC to PNG Converter', href: '/heic-to-png' },
       { label: 'SVG to 4K PNG Converter', href: '/convert/svg-to-png' },
