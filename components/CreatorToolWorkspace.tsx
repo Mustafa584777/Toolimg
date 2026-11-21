@@ -20,9 +20,9 @@ import {
   createSampleHindiHandwritingFile,
   createSampleImageFile,
   createSampleUiScreenshotFile,
-  fileToDataUrl,
   formatBytes,
   inspectImageFile,
+  prepareVisionDataUrl,
   renderHtmlToImageBlob,
   type InspectedImage,
 } from '@/lib/image-processor';
@@ -224,15 +224,20 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
     if (!sourceImage || tool.mode === 'html-to-image') return;
     setIsProcessing(true);
     setErrorMsg(null);
+    setTextOutput('');
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 14_500);
 
     try {
-      const dataUrl = await fileToDataUrl(sourceImage.file);
+      const dataUrl = await prepareVisionDataUrl(sourceImage.file);
       const mimeMatch = dataUrl.match(/^data:([^;]+);base64,/);
-      const mimeType = mimeMatch?.[1] || sourceImage.mimeType || 'image/png';
+      const mimeType = mimeMatch?.[1] || sourceImage.mimeType || 'image/jpeg';
 
       const response = await fetch('/api/gemini/vision', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           tool: tool.mode,
           imageBase64: dataUrl,
@@ -250,21 +255,24 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
         error?: string;
       };
       if (!response.ok || payload.error) {
-        throw new Error(payload.error || 'Processing failed.');
+        throw new Error('HIGH_DEMAND');
       }
 
       const cleaned = (payload.result ?? '')
         .replace(/^```[a-zA-Z]*\n?/, '')
         .replace(/\n?```$/, '')
         .trim();
+
+      if (!cleaned) {
+        throw new Error('EMPTY_RESULT');
+      }
+
       setTextOutput(cleaned);
-    } catch (err: unknown) {
-      setErrorMsg(
-        err instanceof Error
-          ? err.message
-          : 'Unable to process image right now.'
-      );
+    } catch {
+      setTextOutput('');
+      setErrorMsg('This tool is in high demand. Please try later.');
     } finally {
+      clearTimeout(timeoutId);
       setIsProcessing(false);
     }
   };

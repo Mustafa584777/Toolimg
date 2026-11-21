@@ -508,6 +508,61 @@ export function fileToDataUrl(file: File): Promise<string> {
   });
 }
 
+export async function prepareVisionDataUrl(file: File): Promise<string> {
+  const MAX_EDGE = 1600;
+  const MAX_RAW_BYTES = 750 * 1024;
+  const isSupportedWebMime =
+    file.type === 'image/jpeg' ||
+    file.type === 'image/png' ||
+    file.type === 'image/webp';
+
+  const objectUrl = URL.createObjectURL(file);
+  try {
+    const img = await loadImageElement(objectUrl);
+    const width = img.naturalWidth || img.width;
+    const height = img.naturalHeight || img.height;
+
+    if (
+      isSupportedWebMime &&
+      file.size <= MAX_RAW_BYTES &&
+      width <= MAX_EDGE &&
+      height <= MAX_EDGE
+    ) {
+      return await fileToDataUrl(file);
+    }
+
+    const scale = Math.min(1, MAX_EDGE / Math.max(width, height, 1));
+    const targetW = Math.max(1, Math.round(width * scale));
+    const targetH = Math.max(1, Math.round(height * scale));
+
+    const canvas = document.createElement('canvas');
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return await fileToDataUrl(file);
+    }
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, targetW, targetH);
+    ctx.drawImage(img, 0, 0, targetW, targetH);
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, 'image/jpeg', 0.88)
+    );
+    if (!blob) {
+      return await fileToDataUrl(file);
+    }
+    return await fileToDataUrl(
+      new File([blob], 'vision-input.jpg', { type: 'image/jpeg' })
+    );
+  } catch {
+    return await fileToDataUrl(file);
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
 export async function extractDominantColors(
   file: File,
   count = 6
