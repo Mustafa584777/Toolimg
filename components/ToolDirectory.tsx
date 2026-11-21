@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Search, X } from 'lucide-react';
+import { ExternalLink, Search, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import {
   CORE_TOOLS,
@@ -176,14 +176,14 @@ export function ToolDirectory() {
                   </p>
                 </div>
 
-                <div className="mt-4 space-y-3 border-t border-[#F3F4F6] pt-3.5">
+                <div className="mt-4 flex items-center justify-between gap-2.5 border-t border-[#F3F4F6] pt-3.5">
                   {/* Clickable Programmatic Preset Tags */}
-                  <div className="flex flex-wrap items-center gap-1.5">
+                  <div className="flex min-w-0 flex-wrap items-center gap-1.5">
                     {tool.tags.map((tag) => (
                       <Link
                         key={`${tool.id}-${tag.label}`}
                         href={tag.href}
-                        className="inline-flex items-center whitespace-nowrap rounded-lg bg-[#F9FAFB] px-2.5 py-1 text-xs font-medium text-[#4B5563] transition-colors hover:bg-[#FFF7ED] hover:text-[#C2410C]"
+                        className="inline-flex items-center whitespace-nowrap rounded-lg bg-[#F9FAFB] px-2 py-1 text-[11px] font-medium text-[#4B5563] transition-colors hover:bg-[#FFF7ED] hover:text-[#C2410C]"
                       >
                         {tag.label}
                       </Link>
@@ -192,10 +192,10 @@ export function ToolDirectory() {
 
                   <Link
                     href={tool.href}
-                    className="btn-orange-gradient inline-flex w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold transition-all"
+                    className="btn-orange-gradient inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl px-3 py-1.5 text-xs font-semibold transition-all"
                   >
-                    <span>Explore {tool.title}</span>
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                    <span>Open Tool</span>
                   </Link>
                 </div>
               </article>
