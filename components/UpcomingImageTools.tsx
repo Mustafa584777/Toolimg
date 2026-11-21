@@ -278,7 +278,7 @@ export function UpcomingImageTools() {
             return (
               <article
                 key={tool.title}
-                className="upcoming-grey-card relative cursor-default select-none overflow-hidden rounded-2xl border border-[#E5E7EB] bg-[#F3F4F6] p-5"
+                className="upcoming-grey-card relative cursor-default select-none overflow-hidden rounded-2xl bg-[#F3F4F6] p-5 shadow-[0_10px_26px_-6px_rgba(17,24,39,0.10),0_4px_10px_-4px_rgba(17,24,39,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_36px_-8px_rgba(17,24,39,0.16)]"
               >
                 <div className="opacity-65">
                   <div className="flex items-start justify-between gap-3">

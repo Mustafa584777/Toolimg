@@ -75,7 +75,7 @@ export function Navbar() {
           {/* Zone 2: Clean Centered Navigation Links */}
           <nav
             aria-label="Primary Silo Navigation"
-            className="hidden md:flex items-center gap-6 text-sm font-medium text-[#4B5563]"
+            className="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-medium text-[#4B5563]"
           >
             <Link
               href="/"
@@ -142,8 +142,15 @@ export function Navbar() {
             </button>
 
             <Link
+              href="/contact"
+              className="hidden sm:inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-xl bg-[#FFF7ED] px-3.5 text-xs font-semibold text-[#C2410C] transition-colors hover:bg-[#FFEDD5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
+            >
+              Request a Tool
+            </Link>
+
+            <Link
               href="/#tools"
-              className="btn-orange-gradient hidden sm:inline-flex h-9 items-center justify-center rounded-xl px-4 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
+              className="btn-orange-gradient hidden sm:inline-flex h-9 shrink-0 items-center justify-center whitespace-nowrap rounded-xl px-4 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
             >
               Browse Tools
             </Link>
@@ -256,7 +263,14 @@ export function Navbar() {
             </div>
 
             {/* Sidebar Bottom Actions */}
-            <div className="border-t border-[#F3F4F6] px-4 py-4">
+            <div className="space-y-2.5 border-t border-[#F3F4F6] px-4 py-4">
+              <Link
+                href="/contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex min-h-[44px] w-full items-center justify-center rounded-xl bg-[#FFF7ED] px-4 text-sm font-semibold text-[#C2410C] transition-colors hover:bg-[#FFEDD5]"
+              >
+                Request a Tool
+              </Link>
               <Link
                 href="/#tools"
                 onClick={() => setMobileMenuOpen(false)}

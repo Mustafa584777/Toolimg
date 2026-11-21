@@ -260,7 +260,7 @@ export function HeroDropzone() {
             }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
-            className={`rounded-2xl border-2 border-dotted px-4 py-8 transition-all sm:px-6 sm:py-10 ${
+            className={`overflow-hidden rounded-2xl border-2 border-dotted px-4 py-8 transition-all sm:px-6 sm:py-10 ${
               isDragging
                 ? 'border-[#F97316] bg-[#FFF7ED]/50 ring-4 ring-[#F97316]/15'
                 : 'border-[#D1D5DB] bg-white hover:border-[#FDBA74]'
@@ -419,56 +419,56 @@ export function HeroDropzone() {
             )}
           </div>
 
-          {/* 4-Item Inline Feature Strip */}
-          <div className="mx-auto mt-7 flex flex-nowrap items-center justify-between gap-4 overflow-x-auto pb-1 sm:justify-center sm:gap-9">
-            <div className="flex shrink-0 items-center gap-2.5">
+          {/* 4-Item Inline Feature Strip (No horizontal scroll on mobile) */}
+          <div className="mx-auto mt-7 grid grid-cols-2 gap-x-4 gap-y-3.5 sm:grid-cols-4 sm:gap-6">
+            <div className="flex min-w-0 items-center gap-2.5">
               <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
                 <Zap className="h-5 w-5" aria-hidden="true" />
               </span>
-              <div>
-                <p className="whitespace-nowrap text-xs font-semibold text-[#111827]">
+              <div className="min-w-0">
+                <p className="truncate text-xs font-semibold text-[#111827]">
                   Fast &amp; Reliable
                 </p>
-                <p className="whitespace-nowrap text-[11px] text-[#6B7280]">
+                <p className="truncate text-[11px] text-[#6B7280]">
                   Results in milliseconds
                 </p>
               </div>
             </div>
-            <div className="flex shrink-0 items-center gap-2.5">
+            <div className="flex min-w-0 items-center gap-2.5">
               <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
                 <ShieldCheck className="h-5 w-5" aria-hidden="true" />
               </span>
-              <div>
-                <p className="whitespace-nowrap text-xs font-semibold text-[#111827]">
+              <div className="min-w-0">
+                <p className="truncate text-xs font-semibold text-[#111827]">
                   Zero Uploads
                 </p>
-                <p className="whitespace-nowrap text-[11px] text-[#6B7280]">
+                <p className="truncate text-[11px] text-[#6B7280]">
                   Private on your device
                 </p>
               </div>
             </div>
-            <div className="flex shrink-0 items-center gap-2.5">
+            <div className="flex min-w-0 items-center gap-2.5">
               <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
                 <InfinityIcon className="h-5 w-5" aria-hidden="true" />
               </span>
-              <div>
-                <p className="whitespace-nowrap text-xs font-semibold text-[#111827]">
+              <div className="min-w-0">
+                <p className="truncate text-xs font-semibold text-[#111827]">
                   Free &amp; Unlimited
                 </p>
-                <p className="whitespace-nowrap text-[11px] text-[#6B7280]">
+                <p className="truncate text-[11px] text-[#6B7280]">
                   No watermarks or caps
                 </p>
               </div>
             </div>
-            <div className="flex shrink-0 items-center gap-2.5">
+            <div className="flex min-w-0 items-center gap-2.5">
               <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
                 <Lock className="h-5 w-5" aria-hidden="true" />
               </span>
-              <div>
-                <p className="whitespace-nowrap text-xs font-semibold text-[#111827]">
+              <div className="min-w-0">
+                <p className="truncate text-xs font-semibold text-[#111827]">
                   Exact Specs
                 </p>
-                <p className="whitespace-nowrap text-[11px] text-[#6B7280]">
+                <p className="truncate text-[11px] text-[#6B7280]">
                   KB, DPI &amp; social sizes
                 </p>
               </div>

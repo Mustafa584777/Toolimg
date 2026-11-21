@@ -59,7 +59,7 @@ export function TrustAndShortcuts() {
             {COMPARISON_FEATURES.map((feat) => (
               <div
                 key={feat.index}
-                className="card-orange-sheen flex flex-col justify-between rounded-2xl border border-[#E5E7EB] p-6 shadow-[0_1px_3px_rgba(17,24,39,0.04)]"
+                className="card-orange-sheen flex flex-col justify-between rounded-2xl p-6 shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(17,24,39,0.15),0_8px_20px_-6px_rgba(234,88,12,0.18)]"
               >
                 <div>
                   <div className="flex items-center justify-between gap-4">
@@ -165,7 +165,7 @@ export function TrustAndShortcuts() {
             {SILO_SHORTCUT_GROUPS.map((group) => (
               <div
                 key={group.href}
-                className="card-orange-sheen rounded-2xl border border-[#E5E7EB] p-5 shadow-[0_1px_3px_rgba(17,24,39,0.04)] transition-colors hover:border-[#FDBA74]"
+                className="card-orange-sheen rounded-2xl p-5 shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(17,24,39,0.15),0_8px_20px_-6px_rgba(234,88,12,0.18)]"
               >
                 <Link
                   href={group.href}

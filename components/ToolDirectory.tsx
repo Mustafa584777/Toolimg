@@ -125,7 +125,7 @@ export function ToolDirectory() {
 
         {/* Core Hub Tool Cards Grid */}
         {filteredTools.length === 0 ? (
-          <div className="card-orange-sheen mt-8 rounded-2xl border border-[#E5E7EB] px-6 py-12 text-center">
+          <div className="card-orange-sheen mt-8 rounded-2xl px-6 py-12 text-center shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)]">
             <p className="text-sm font-semibold text-[#111827]">
               No tools match &ldquo;{searchQuery}&rdquo;
             </p>
@@ -149,7 +149,7 @@ export function ToolDirectory() {
             {filteredTools.map((tool, index) => (
               <article
                 key={tool.id}
-                className="card-orange-sheen group flex flex-col justify-between rounded-2xl border border-[#E5E7EB] p-5 shadow-[0_1px_3px_rgba(17,24,39,0.04)] transition-all duration-150 hover:-translate-y-0.5 hover:border-[#FDBA74] hover:shadow-[0_12px_28px_-10px_rgba(234,88,12,0.16)]"
+                className="card-orange-sheen group flex flex-col justify-between rounded-2xl p-5 shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)] transition-all duration-200 hover:-translate-y-1.5 hover:shadow-[0_22px_44px_-10px_rgba(17,24,39,0.16),0_10px_22px_-8px_rgba(234,88,12,0.22)]"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3">
