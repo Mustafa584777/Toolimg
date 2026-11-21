@@ -22,7 +22,7 @@ import {
   createSampleUiScreenshotFile,
   formatBytes,
   inspectImageFile,
-  prepareVisionDataUrl,
+  prepareVisionImagePayload,
   renderHtmlToImageBlob,
   type InspectedImage,
 } from '@/lib/image-processor';
@@ -230,37 +230,47 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
     const timeoutId = setTimeout(() => controller.abort(), 14_500);
 
     try {
-      const dataUrl = await prepareVisionDataUrl(sourceImage.file);
-      const mimeMatch = dataUrl.match(/^data:([^;]+);base64,/);
-      const mimeType = mimeMatch?.[1] || sourceImage.mimeType || 'image/jpeg';
+      const { blob, mimeType } = await prepareVisionImagePayload(
+        sourceImage.file
+      );
+
+      const formData = new FormData();
+      formData.append('tool', tool.mode);
+      formData.append(
+        'image',
+        new File([blob], 'vision-input.jpg', { type: mimeType })
+      );
+      formData.append(
+        'options',
+        JSON.stringify({
+          codeStack,
+          promptStyle,
+          includeEnglishTranslation,
+        })
+      );
 
       const response = await fetch('/api/gemini/vision', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,
-        body: JSON.stringify({
-          tool: tool.mode,
-          imageBase64: dataUrl,
-          mimeType,
-          options: {
-            codeStack,
-            promptStyle,
-            includeEnglishTranslation,
-          },
-        }),
+        body: formData,
       });
 
-      const payload = (await response.json()) as {
-        result?: string;
-        error?: string;
-      };
+      const rawText = await response.text();
+      let payload: { result?: string; error?: string } = {};
+      try {
+        payload = JSON.parse(rawText) as { result?: string; error?: string };
+      } catch {
+        throw new Error('INVALID_RESPONSE');
+      }
+
       if (!response.ok || payload.error) {
         throw new Error('HIGH_DEMAND');
       }
 
       const cleaned = (payload.result ?? '')
-        .replace(/^```[a-zA-Z]*\n?/, '')
-        .replace(/\n?```$/, '')
+        .trim()
+        .replace(/^```[a-zA-Z]*\s*\n?/, '')
+        .replace(/\n?```\s*$/, '')
         .trim();
 
       if (!cleaned) {

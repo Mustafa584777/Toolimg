@@ -217,7 +217,7 @@ export function HeroDropzone() {
           </Link>
 
           <h1 className="mt-5 font-[family-name:var(--font-display)] text-[clamp(2.2rem,4.6vw,3.5rem)] font-extrabold leading-[1.08] tracking-tight text-[#111827] text-balance">
-            All Image Tools — Private &amp; Instant —{' '}
+            All Image Tools{' '}
             <span className="relative inline-block">
               <span className="text-orange-gradient">Right in Your Browser</span>
               <svg

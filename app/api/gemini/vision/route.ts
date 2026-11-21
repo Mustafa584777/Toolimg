@@ -26,15 +26,17 @@ export type VisionToolType =
   | 'image-to-code'
   | 'gemini-image-to-prompt';
 
+interface VisionOptions {
+  codeStack?: 'html-tailwind' | 'react-tailwind' | 'html-css';
+  promptStyle?: 'midjourney' | 'stable-diffusion' | 'video' | 'json';
+  includeEnglishTranslation?: boolean;
+}
+
 interface VisionRequestBody {
   tool: VisionToolType;
   imageBase64: string;
   mimeType: string;
-  options?: {
-    codeStack?: 'html-tailwind' | 'react-tailwind' | 'html-css';
-    promptStyle?: 'midjourney' | 'stable-diffusion' | 'video' | 'json';
-    includeEnglishTranslation?: boolean;
-  };
+  options?: VisionOptions;
 }
 
 interface ModelCandidate {
@@ -65,10 +67,17 @@ const VISION_MODEL_FALLBACKS: ModelCandidate[] = [
   },
 ];
 
+const VALID_TOOLS = new Set<VisionToolType>([
+  'handwriting-to-text',
+  'hindi-handwriting-to-text',
+  'image-to-code',
+  'gemini-image-to-prompt',
+]);
+
 function buildInstruction(
   tool: VisionToolType,
-  options?: VisionRequestBody['options']
-): { systemInstruction: string; userPrompt: string } {
+  options?: VisionOptions
+): { systemInstruction: string; userPrompt: string; expectJson: boolean } {
   switch (tool) {
     case 'handwriting-to-text':
       return {
@@ -76,6 +85,7 @@ function buildInstruction(
           'You are a high-precision OCR transcription engine. Extract all handwritten or printed text accurately while preserving paragraph structure, line breaks, lists, and punctuation. Do not add commentary or markdown code fences unless the text itself is code. If any word is illegible, mark it as [unclear].',
         userPrompt:
           'Transcribe all handwritten text in this image cleanly and accurately. Output only the extracted text.',
+        expectJson: false,
       };
 
     case 'hindi-handwriting-to-text':
@@ -85,6 +95,7 @@ function buildInstruction(
         userPrompt: options?.includeEnglishTranslation
           ? 'Transcribe all Hindi handwritten text from this image in clean Unicode Devanagari. Then add a "---" divider and provide an accurate English translation below it.'
           : 'Transcribe all Hindi handwritten text from this image in clean Unicode Devanagari script. Output only the extracted Hindi text without extra commentary.',
+        expectJson: false,
       };
 
     case 'image-to-code': {
@@ -99,6 +110,7 @@ function buildInstruction(
         systemInstruction:
           'You are a senior frontend engineer. Convert UI screenshots, wireframes, or design mockups into clean, responsive, accessible code. Output ONLY the raw code without markdown backticks or explanation.',
         userPrompt: `Recreate the visual layout, typography, colors, spacing, and components shown in this image as ${stackLabel}. Output only valid code.`,
+        expectJson: false,
       };
     }
 
@@ -107,9 +119,10 @@ function buildInstruction(
       if (style === 'json') {
         return {
           systemInstruction:
-            'You are a visual prompt engineer. Analyze the image and output a clean, valid JSON object describing subject, setting, composition, lighting, camera_lens, color_palette, style, and mood.',
+            'You are a visual prompt engineer. Analyze the image and output ONLY a valid JSON object (no markdown fences) with keys: subject, setting, composition, lighting, camera_lens, color_palette, style, mood.',
           userPrompt:
             'Analyze this image and return a structured JSON visual prompt specification.',
+          expectJson: true,
         };
       }
       if (style === 'stable-diffusion') {
@@ -118,6 +131,7 @@ function buildInstruction(
             'You are an expert Stable Diffusion prompt engineer. Output a comma-separated positive prompt of crisp descriptive tokens covering subject, environment, lighting, lens, medium, and quality tags, followed by a concise Negative Prompt line.',
           userPrompt:
             'Reverse-engineer this image into an optimized Stable Diffusion prompt and negative prompt.',
+          expectJson: false,
         };
       }
       if (style === 'video') {
@@ -126,6 +140,7 @@ function buildInstruction(
             'You are a cinematic AI video prompt director. Describe the scene, subject action, subtle camera movement, lighting, lens focal length, and atmosphere in one cohesive paragraph suitable for AI video generation.',
           userPrompt:
             'Convert this still image into a rich cinematic AI video generation prompt.',
+          expectJson: false,
         };
       }
       return {
@@ -133,8 +148,31 @@ function buildInstruction(
           'You are an expert AI image prompt engineer. Write a vivid, detailed, copy-ready prompt describing the exact subject, pose, composition, lighting, textures, color grading, camera perspective, and artistic medium so an image model can recreate a similar aesthetic.',
         userPrompt:
           'Generate a detailed, high-craft AI image prompt describing this image.',
+        expectJson: false,
       };
     }
+  }
+}
+
+function normalizeJsonOutput(rawText: string): string {
+  const cleaned = rawText
+    .trim()
+    .replace(/^```(?:json)?\s*\n?/i, '')
+    .replace(/\n?```\s*$/, '')
+    .trim();
+
+  try {
+    const parsed: unknown = JSON.parse(cleaned);
+    return JSON.stringify(parsed, null, 2);
+  } catch {
+    const startIdx = cleaned.indexOf('{');
+    const endIdx = cleaned.lastIndexOf('}');
+    if (startIdx !== -1 && endIdx > startIdx) {
+      const slice = cleaned.slice(startIdx, endIdx + 1);
+      const parsed: unknown = JSON.parse(slice);
+      return JSON.stringify(parsed, null, 2);
+    }
+    throw new Error('Invalid JSON generated by model');
   }
 }
 
@@ -144,6 +182,7 @@ async function callVisionCandidate(
   cleanBase64: string,
   systemInstruction: string,
   userPrompt: string,
+  expectJson: boolean,
   signal: AbortSignal
 ): Promise<string> {
   const config: GenerateContentConfig = {
@@ -152,6 +191,9 @@ async function callVisionCandidate(
   };
   if (candidate.thinkingConfig) {
     config.thinkingConfig = candidate.thinkingConfig;
+  }
+  if (expectJson) {
+    config.responseMimeType = 'application/json';
   }
 
   const response = await ai.models.generateContent({
@@ -174,7 +216,7 @@ async function callVisionCandidate(
   if (!text) {
     throw new Error(`Empty response from ${candidate.model}`);
   }
-  return text;
+  return expectJson ? normalizeJsonOutput(text) : text;
 }
 
 function generateWithFastFallbacks(params: {
@@ -182,8 +224,10 @@ function generateWithFastFallbacks(params: {
   cleanBase64: string;
   systemInstruction: string;
   userPrompt: string;
+  expectJson: boolean;
 }): Promise<string> {
-  const { mimeType, cleanBase64, systemInstruction, userPrompt } = params;
+  const { mimeType, cleanBase64, systemInstruction, userPrompt, expectJson } =
+    params;
 
   return new Promise<string>((resolve, reject) => {
     let settled = false;
@@ -239,6 +283,7 @@ function generateWithFastFallbacks(params: {
         cleanBase64,
         systemInstruction,
         userPrompt,
+        expectJson,
         controller.signal
       )
         .then((text) => {
@@ -264,6 +309,74 @@ function generateWithFastFallbacks(params: {
   });
 }
 
+async function parseVisionRequest(req: NextRequest): Promise<{
+  tool: VisionToolType;
+  cleanBase64: string;
+  mimeType: string;
+  options?: VisionOptions;
+} | null> {
+  const contentType = (req.headers.get('content-type') || '').toLowerCase();
+
+  if (contentType.includes('multipart/form-data')) {
+    const form = await req.formData();
+    const rawTool = String(form.get('tool') ?? '') as VisionToolType;
+    const imageEntry = form.get('image');
+    const rawOptions = form.get('options');
+
+    if (!VALID_TOOLS.has(rawTool) || !(imageEntry instanceof Blob)) {
+      return null;
+    }
+
+    const buffer = Buffer.from(await imageEntry.arrayBuffer());
+    if (!buffer.byteLength) return null;
+
+    let options: VisionOptions | undefined;
+    if (typeof rawOptions === 'string' && rawOptions.trim()) {
+      try {
+        options = JSON.parse(rawOptions) as VisionOptions;
+      } catch {
+        options = undefined;
+      }
+    }
+
+    return {
+      tool: rawTool,
+      cleanBase64: buffer.toString('base64'),
+      mimeType: imageEntry.type || 'image/jpeg',
+      options,
+    };
+  }
+
+  const rawBody = await req.text();
+  if (!rawBody.trim()) return null;
+
+  let body: VisionRequestBody;
+  try {
+    body = JSON.parse(rawBody) as VisionRequestBody;
+  } catch {
+    return null;
+  }
+
+  if (
+    !body?.tool ||
+    !VALID_TOOLS.has(body.tool) ||
+    !body?.imageBase64 ||
+    !body?.mimeType
+  ) {
+    return null;
+  }
+
+  const cleanBase64 = body.imageBase64.replace(/^data:[^;]+;base64,/, '');
+  if (!cleanBase64) return null;
+
+  return {
+    tool: body.tool,
+    cleanBase64,
+    mimeType: body.mimeType,
+    options: body.options,
+  };
+}
+
 export async function POST(req: NextRequest) {
   try {
     if (!process.env.GEMINI_API_KEY) {
@@ -271,26 +384,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: HIGH_DEMAND_ERROR }, { status: 503 });
     }
 
-    const body = (await req.json()) as VisionRequestBody;
-    if (!body?.tool || !body?.imageBase64 || !body?.mimeType) {
+    const parsed = await parseVisionRequest(req);
+    if (!parsed) {
       return NextResponse.json({ error: HIGH_DEMAND_ERROR }, { status: 400 });
     }
 
-    const cleanBase64 = body.imageBase64.replace(/^data:[^;]+;base64,/, '');
-    if (!cleanBase64) {
-      return NextResponse.json({ error: HIGH_DEMAND_ERROR }, { status: 400 });
-    }
-
-    const { systemInstruction, userPrompt } = buildInstruction(
-      body.tool,
-      body.options
+    const { systemInstruction, userPrompt, expectJson } = buildInstruction(
+      parsed.tool,
+      parsed.options
     );
 
     const resultText = await generateWithFastFallbacks({
-      mimeType: body.mimeType,
-      cleanBase64,
+      mimeType: parsed.mimeType,
+      cleanBase64: parsed.cleanBase64,
       systemInstruction,
       userPrompt,
+      expectJson,
     });
 
     if (!resultText.trim()) {

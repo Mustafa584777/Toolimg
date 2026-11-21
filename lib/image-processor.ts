@@ -508,9 +508,11 @@ export function fileToDataUrl(file: File): Promise<string> {
   });
 }
 
-export async function prepareVisionDataUrl(file: File): Promise<string> {
-  const MAX_EDGE = 1600;
-  const MAX_RAW_BYTES = 750 * 1024;
+export async function prepareVisionImagePayload(
+  file: File
+): Promise<{ blob: Blob; mimeType: string }> {
+  const MAX_EDGE = 1440;
+  const MAX_RAW_BYTES = 450 * 1024;
   const isSupportedWebMime =
     file.type === 'image/jpeg' ||
     file.type === 'image/png' ||
@@ -528,7 +530,7 @@ export async function prepareVisionDataUrl(file: File): Promise<string> {
       width <= MAX_EDGE &&
       height <= MAX_EDGE
     ) {
-      return await fileToDataUrl(file);
+      return { blob: file, mimeType: file.type };
     }
 
     const scale = Math.min(1, MAX_EDGE / Math.max(width, height, 1));
@@ -540,27 +542,37 @@ export async function prepareVisionDataUrl(file: File): Promise<string> {
     canvas.height = targetH;
     const ctx = canvas.getContext('2d');
     if (!ctx) {
-      return await fileToDataUrl(file);
+      return { blob: file, mimeType: file.type || 'image/jpeg' };
     }
 
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, targetW, targetH);
     ctx.drawImage(img, 0, 0, targetW, targetH);
 
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, 'image/jpeg', 0.88)
+    let blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, 'image/jpeg', 0.86)
     );
-    if (!blob) {
-      return await fileToDataUrl(file);
+    if (blob && blob.size > 650 * 1024) {
+      blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, 'image/jpeg', 0.72)
+      );
     }
-    return await fileToDataUrl(
-      new File([blob], 'vision-input.jpg', { type: 'image/jpeg' })
-    );
+    if (!blob) {
+      return { blob: file, mimeType: file.type || 'image/jpeg' };
+    }
+    return { blob, mimeType: 'image/jpeg' };
   } catch {
-    return await fileToDataUrl(file);
+    return { blob: file, mimeType: file.type || 'image/jpeg' };
   } finally {
     URL.revokeObjectURL(objectUrl);
   }
+}
+
+export async function prepareVisionDataUrl(file: File): Promise<string> {
+  const { blob, mimeType } = await prepareVisionImagePayload(file);
+  return fileToDataUrl(
+    new File([blob], 'vision-input.jpg', { type: mimeType })
+  );
 }
 
 export async function extractDominantColors(
