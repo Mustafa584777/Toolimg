@@ -31,7 +31,10 @@ export function Footer() {
                 referrerPolicy="no-referrer"
                 className="h-7 w-7 rounded-md object-contain"
               />
-              <span>toolimg.online</span>
+              <span className="font-[family-name:var(--font-space-mono)] text-base font-bold tracking-tight">
+                <span>TOOL</span>
+                <span className="text-[#EA580C]">IMG</span>
+              </span>
             </Link>
             <div className="mt-2.5 flex items-center gap-1.5 text-xs font-medium text-[#C2410C]">
               <ShieldCheck className="h-4 w-4 shrink-0 text-[#C2410C]" aria-hidden="true" />

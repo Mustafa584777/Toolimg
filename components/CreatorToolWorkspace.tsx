@@ -584,19 +584,7 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
           </div>
         ) : (
           /* VISION OCR / CODE / PROMPT WORKSPACE */
-          <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragging(true);
-            }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={handleDrop}
-            className={`mx-auto mt-6 max-w-4xl rounded-2xl border bg-white p-5 transition-all sm:p-7 ${
-              isDragging
-                ? 'border-[#F97316] bg-[#FFF7ED]/40 ring-4 ring-[#F97316]/15'
-                : 'border-[#E5E7EB] shadow-[0_8px_30px_-10px_rgba(17,24,39,0.08)]'
-            }`}
-          >
+          <div className="mx-auto mt-6 max-w-4xl">
             <input
               ref={fileInputRef}
               type="file"
@@ -605,7 +593,19 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
               className="sr-only"
             />
 
-            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#D1D5DB] bg-[#FAFAFA]/70 px-5 py-7 text-center">
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleDrop}
+              className={`flex flex-col items-center justify-center rounded-2xl border-2 border-dotted px-5 py-8 text-center transition-all ${
+                isDragging
+                  ? 'border-[#F97316] bg-[#FFF7ED]/50 ring-4 ring-[#F97316]/15'
+                  : 'border-[#D1D5DB] bg-white hover:border-[#FDBA74]'
+              }`}
+            >
               {sourceImage ? (
                 <div className="flex w-full flex-col gap-4 text-left sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex min-w-0 items-center gap-3.5">
@@ -618,8 +618,8 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
                         className="h-14 w-14 shrink-0 rounded-xl border border-[#E5E7EB] bg-white object-cover"
                       />
                     ) : (
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-[#FED7AA] bg-[#FFF7ED] text-[#EA580C]">
-                        <UploadCloud className="h-5 w-5" aria-hidden="true" />
+                      <div className="flex shrink-0 items-center justify-center text-[#EA580C]">
+                        <UploadCloud className="h-6 w-6" aria-hidden="true" />
                       </div>
                     )}
                     <div className="min-w-0">
@@ -639,7 +639,7 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="inline-flex min-h-[40px] items-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2 text-xs font-semibold text-[#111827] hover:border-[#FDBA74] hover:bg-[#FFF7ED]"
+                      className="inline-flex min-h-[40px] items-center gap-2 rounded-xl bg-[#F9FAFB] px-4 py-2 text-xs font-semibold text-[#111827] hover:bg-[#FFF7ED] hover:text-[#C2410C]"
                     >
                       <ImagePlus className="h-4 w-4 text-[#EA580C]" aria-hidden="true" />
                       <span>Change Image</span>
@@ -648,8 +648,8 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
                 </div>
               ) : (
                 <>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-[#FED7AA] bg-[#FFF7ED] text-[#EA580C]">
-                    <UploadCloud className="h-6 w-6" aria-hidden="true" />
+                  <div className="flex items-center justify-center text-[#EA580C]">
+                    <UploadCloud className="h-8 w-8" aria-hidden="true" />
                   </div>
                   <p className="mt-3 text-sm font-semibold text-[#111827]">
                     Drag &amp; drop, paste or select an image
@@ -670,7 +670,7 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
                     <button
                       type="button"
                       onClick={handleTrySample}
-                      className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-[#E5E7EB] bg-white px-4 py-2 text-xs font-semibold text-[#111827] hover:border-[#FDBA74] hover:bg-[#FFF7ED]/60"
+                      className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl bg-[#F9FAFB] px-4 py-2 text-xs font-semibold text-[#111827] hover:bg-[#FFF7ED] hover:text-[#C2410C]"
                     >
                       <Sparkles className="h-3.5 w-3.5 text-[#F97316]" aria-hidden="true" />
                       <span>Try Sample</span>

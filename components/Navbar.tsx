@@ -66,8 +66,9 @@ export function Navbar() {
               referrerPolicy="no-referrer"
               className="h-8 w-8 rounded-lg object-contain"
             />
-            <span className="font-[family-name:var(--font-display)] text-base font-bold tracking-tight">
-              toolimg.online
+            <span className="font-[family-name:var(--font-space-mono)] text-base font-bold tracking-tight">
+              <span>TOOL</span>
+              <span className="text-[#EA580C]">IMG</span>
             </span>
           </Link>
 
@@ -193,8 +194,9 @@ export function Navbar() {
                     referrerPolicy="no-referrer"
                     className="h-6.5 w-6.5 rounded-md object-contain"
                   />
-                  <span className="font-[family-name:var(--font-display)] text-base font-bold tracking-tight">
-                    toolimg.online
+                  <span className="font-[family-name:var(--font-space-mono)] text-base font-bold tracking-tight">
+                    <span>TOOL</span>
+                    <span className="text-[#EA580C]">IMG</span>
                   </span>
                 </Link>
                 <button

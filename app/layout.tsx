@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+import { JetBrains_Mono, Plus_Jakarta_Sans, Space_Mono } from 'next/font/google';
 import './globals.css';
 import { FAQ_ITEMS } from '@/lib/tools-data';
 import { ImageSessionProvider } from '@/components/ImageSessionProvider';
@@ -18,6 +18,13 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-jetbrains-mono',
+  display: 'swap',
+});
+
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  weight: ['700'],
+  variable: '--font-space-mono',
   display: 'swap',
 });
 
@@ -143,7 +150,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jakarta.variable} ${jetbrainsMono.variable}`}
+      className={`${jakarta.variable} ${jetbrainsMono.variable} ${spaceMono.variable}`}
     >
       <head>
         <link

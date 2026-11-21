@@ -217,7 +217,7 @@ export function HeroDropzone() {
           </Link>
 
           <h1 className="mt-5 font-[family-name:var(--font-display)] text-[clamp(2.2rem,4.6vw,3.5rem)] font-extrabold leading-[1.08] tracking-tight text-[#111827] text-balance">
-            Private, Instant Image Tools —{' '}
+            All Image Tools — Private &amp; Instant —{' '}
             <span className="relative inline-block">
               <span className="text-orange-gradient">Right in Your Browser</span>
               <svg
@@ -260,10 +260,10 @@ export function HeroDropzone() {
             }}
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
-            className={`rounded-2xl border bg-white p-4 transition-all sm:p-6 ${
+            className={`rounded-2xl border-2 border-dotted px-4 py-8 transition-all sm:px-6 sm:py-10 ${
               isDragging
                 ? 'border-[#F97316] bg-[#FFF7ED]/50 ring-4 ring-[#F97316]/15'
-                : 'border-[#E5E7EB] shadow-[0_8px_30px_-10px_rgba(17,24,39,0.08)] hover:border-[#FDBA74]'
+                : 'border-[#D1D5DB] bg-white hover:border-[#FDBA74]'
             }`}
           >
             <input
@@ -276,7 +276,7 @@ export function HeroDropzone() {
             />
 
             {!inspected ? (
-              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#D1D5DB] bg-[#FAFAFA]/70 px-4 py-8 text-center sm:py-10">
+              <div className="flex flex-col items-center justify-center text-center">
                 <div className="flex items-center justify-center text-[#EA580C]">
                   <UploadCloud className="h-8 w-8" aria-hidden="true" />
                 </div>
@@ -420,41 +420,57 @@ export function HeroDropzone() {
           </div>
 
           {/* 4-Item Inline Feature Strip */}
-          <div className="mx-auto mt-7 grid max-w-3xl grid-cols-2 gap-3 text-left sm:grid-cols-4 sm:gap-4">
-            <div className="flex items-center gap-2.5">
+          <div className="mx-auto mt-7 flex flex-nowrap items-center justify-between gap-4 overflow-x-auto pb-1 sm:justify-center sm:gap-9">
+            <div className="flex shrink-0 items-center gap-2.5">
               <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
                 <Zap className="h-5 w-5" aria-hidden="true" />
               </span>
               <div>
-                <p className="text-xs font-semibold text-[#111827]">Fast &amp; Reliable</p>
-                <p className="text-[11px] text-[#6B7280]">Results in milliseconds</p>
+                <p className="whitespace-nowrap text-xs font-semibold text-[#111827]">
+                  Fast &amp; Reliable
+                </p>
+                <p className="whitespace-nowrap text-[11px] text-[#6B7280]">
+                  Results in milliseconds
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
+            <div className="flex shrink-0 items-center gap-2.5">
               <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
                 <ShieldCheck className="h-5 w-5" aria-hidden="true" />
               </span>
               <div>
-                <p className="text-xs font-semibold text-[#111827]">Zero Uploads</p>
-                <p className="text-[11px] text-[#6B7280]">Private on your device</p>
+                <p className="whitespace-nowrap text-xs font-semibold text-[#111827]">
+                  Zero Uploads
+                </p>
+                <p className="whitespace-nowrap text-[11px] text-[#6B7280]">
+                  Private on your device
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
+            <div className="flex shrink-0 items-center gap-2.5">
               <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
                 <InfinityIcon className="h-5 w-5" aria-hidden="true" />
               </span>
               <div>
-                <p className="text-xs font-semibold text-[#111827]">Free &amp; Unlimited</p>
-                <p className="text-[11px] text-[#6B7280]">No watermarks or caps</p>
+                <p className="whitespace-nowrap text-xs font-semibold text-[#111827]">
+                  Free &amp; Unlimited
+                </p>
+                <p className="whitespace-nowrap text-[11px] text-[#6B7280]">
+                  No watermarks or caps
+                </p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
+            <div className="flex shrink-0 items-center gap-2.5">
               <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
                 <Lock className="h-5 w-5" aria-hidden="true" />
               </span>
               <div>
-                <p className="text-xs font-semibold text-[#111827]">Exact Specs</p>
-                <p className="text-[11px] text-[#6B7280]">KB, DPI &amp; social sizes</p>
+                <p className="whitespace-nowrap text-xs font-semibold text-[#111827]">
+                  Exact Specs
+                </p>
+                <p className="whitespace-nowrap text-[11px] text-[#6B7280]">
+                  KB, DPI &amp; social sizes
+                </p>
               </div>
             </div>
           </div>
