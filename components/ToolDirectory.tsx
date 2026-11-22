@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Clock, Search, X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { Clock, Pin, Search, X } from 'lucide-react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import {
   CORE_TOOLS,
   SILO_PILLARS,
@@ -11,6 +11,56 @@ import {
 import { ToolIcon } from '@/components/ToolIcon';
 
 type FilterTab = 'all' | SiloCategory;
+
+const PIN_STORAGE_KEY = 'toolimg-pinned-tools';
+const EMPTY_PINNED: string[] = [];
+let cachedRawPins: string | null = null;
+let cachedParsedPins: string[] = EMPTY_PINNED;
+let pinListeners: Array<() => void> = [];
+
+function subscribePins(listener: () => void) {
+  pinListeners.push(listener);
+  return () => {
+    pinListeners = pinListeners.filter((l) => l !== listener);
+  };
+}
+
+function getPinsSnapshot(): string[] {
+  if (typeof window === 'undefined') return EMPTY_PINNED;
+  const raw = window.localStorage.getItem(PIN_STORAGE_KEY);
+  if (raw === cachedRawPins) return cachedParsedPins;
+  cachedRawPins = raw;
+  if (!raw) {
+    cachedParsedPins = EMPTY_PINNED;
+    return cachedParsedPins;
+  }
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    cachedParsedPins = Array.isArray(parsed)
+      ? parsed.filter((id): id is string => typeof id === 'string')
+      : EMPTY_PINNED;
+  } catch {
+    cachedParsedPins = EMPTY_PINNED;
+  }
+  return cachedParsedPins;
+}
+
+function getPinsServerSnapshot(): string[] {
+  return EMPTY_PINNED;
+}
+
+function togglePinnedTool(toolId: string) {
+  if (typeof window === 'undefined') return;
+  const current = getPinsSnapshot();
+  const next = current.includes(toolId)
+    ? current.filter((id) => id !== toolId)
+    : [toolId, ...current];
+  const serialized = JSON.stringify(next);
+  cachedRawPins = serialized;
+  cachedParsedPins = next;
+  window.localStorage.setItem(PIN_STORAGE_KEY, serialized);
+  pinListeners.forEach((l) => l());
+}
 
 function formatElapsedLaunch(launchedAt: string, nowMs: number): {
   hoursLabel: string;
@@ -65,6 +115,11 @@ function LaunchedTimerBadge({ launchedAt }: { launchedAt: string }) {
 export function ToolDirectory() {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const pinnedIds = useSyncExternalStore(
+    subscribePins,
+    getPinsSnapshot,
+    getPinsServerSnapshot
+  );
 
   const tabs: { id: FilterTab; label: string; count: number }[] = useMemo(
     () => [
@@ -85,7 +140,7 @@ export function ToolDirectory() {
 
   const filteredTools = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    return CORE_TOOLS.filter((tool) => {
+    const matches = CORE_TOOLS.filter((tool) => {
       const matchesTab = activeTab === 'all' || tool.category === activeTab;
       if (!matchesTab) return false;
       if (!q) return true;
@@ -96,7 +151,20 @@ export function ToolDirectory() {
         tool.href.toLowerCase().includes(q)
       );
     });
-  }, [activeTab, searchQuery]);
+
+    if (pinnedIds.length === 0) return matches;
+
+    return [...matches].sort((a, b) => {
+      const idxA = pinnedIds.indexOf(a.id);
+      const idxB = pinnedIds.indexOf(b.id);
+      const isPinA = idxA !== -1;
+      const isPinB = idxB !== -1;
+      if (isPinA && isPinB) return idxA - idxB;
+      if (isPinA) return -1;
+      if (isPinB) return 1;
+      return 0;
+    });
+  }, [activeTab, searchQuery, pinnedIds]);
 
   return (
     <section id="tools" className="border-b border-[#F3F4F6] bg-white py-14 sm:py-16">
@@ -119,12 +187,12 @@ export function ToolDirectory() {
           </p>
         </div>
 
-        {/* Category Filter Tabs + Search Bar */}
-        <div className="mt-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        {/* Category Filter Tabs + Search Bar (Stacked & Arranged Vertically — No Sliding) */}
+        <div className="mt-8 flex flex-col items-stretch gap-4 sm:items-center">
           <div
             role="tablist"
             aria-label="Tool categories"
-            className="flex items-center gap-2 overflow-x-auto pb-1"
+            className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-center"
           >
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
@@ -135,7 +203,7 @@ export function ToolDirectory() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex min-h-[38px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl px-3.5 py-2 text-xs font-semibold transition-all sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] ${
+                  className={`inline-flex min-h-[38px] items-center justify-center rounded-xl px-3 py-2 text-center text-xs font-semibold transition-all sm:px-4 sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] ${
                     isActive
                       ? 'btn-orange-gradient'
                       : 'bg-[#F9FAFB] text-[#4B5563] hover:bg-[#FFF7ED] hover:text-[#EA580C]'
@@ -147,7 +215,7 @@ export function ToolDirectory() {
             })}
           </div>
 
-          <div className="relative w-full lg:w-72 shrink-0">
+          <div className="relative mx-auto w-full max-w-md">
             <Search
               className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#F97316]"
               aria-hidden="true"
@@ -196,64 +264,100 @@ export function ToolDirectory() {
           </div>
         ) : (
           <div className="mt-7 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
-            {filteredTools.map((tool, index) => (
-              <article
-                key={tool.id}
-                className="card-orange-sheen group relative flex h-full flex-col justify-between rounded-2xl p-3.5 shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)] transition-all duration-200 hover:-translate-y-1.5 hover:shadow-[0_22px_44px_-10px_rgba(17,24,39,0.16),0_10px_22px_-8px_rgba(234,88,12,0.22)] sm:p-5"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="min-w-0 font-[family-name:var(--font-display)] text-[13px] font-bold leading-snug text-[#111827] sm:text-base">
-                      <Link
-                        href={tool.href}
-                        className="inline-flex items-start gap-1.5 text-left transition-colors group-hover:text-[#EA580C] after:absolute after:inset-0 after:z-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-[#F97316] sm:gap-2"
-                      >
+            {filteredTools.map((tool, index) => {
+              const isPinned = pinnedIds.includes(tool.id);
+              return (
+                <article
+                  key={tool.id}
+                  className="card-orange-sheen group relative flex h-full flex-col justify-between rounded-2xl p-3.5 shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)] transition-all duration-200 hover:-translate-y-1.5 hover:shadow-[0_22px_44px_-10px_rgba(17,24,39,0.16),0_10px_22px_-8px_rgba(234,88,12,0.22)] sm:p-5"
+                >
+                  <div className="min-w-0">
+                    {/* Top Row: Larger Borderless Icon Above Title + Pin Button & Index */}
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="inline-flex items-center justify-center text-[#EA580C]">
                         <ToolIcon
                           name={tool.iconName}
-                          className="mt-0.5 h-4 w-4 shrink-0 text-[#EA580C] transition-transform group-hover:scale-110 sm:h-5 sm:w-5"
+                          className="h-7 w-7 transition-transform duration-200 group-hover:scale-110 sm:h-8 sm:w-8"
                         />
+                      </span>
+
+                      <div className="flex shrink-0 items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            togglePinnedTool(tool.id);
+                          }}
+                          aria-label={
+                            isPinned
+                              ? `Unpin ${tool.title}`
+                              : `Pin ${tool.title} to top`
+                          }
+                          aria-pressed={isPinned}
+                          title={isPinned ? 'Unpin tool' : 'Pin to top'}
+                          className={`relative z-10 inline-flex h-6 w-6 items-center justify-center rounded-lg transition-colors sm:h-7 sm:w-7 ${
+                            isPinned
+                              ? 'bg-[#FFF7ED] text-[#EA580C]'
+                              : 'text-[#9CA3AF] hover:bg-[#FFF7ED] hover:text-[#EA580C]'
+                          }`}
+                        >
+                          <Pin
+                            className={`h-3.5 w-3.5 transition-transform ${
+                              isPinned ? 'fill-current -rotate-45' : ''
+                            }`}
+                            aria-hidden="true"
+                          />
+                        </button>
+                        <span className="font-mono text-[10px] font-semibold text-[#EA580C]/80 tabular-nums sm:text-xs">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                      </div>
+                    </div>
+
+                    <h3 className="mt-2.5 min-w-0 font-[family-name:var(--font-display)] text-[13px] font-bold leading-snug text-[#111827] sm:mt-3 sm:text-base">
+                      <Link
+                        href={tool.href}
+                        className="block text-left transition-colors group-hover:text-[#EA580C] after:absolute after:inset-0 after:z-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-[#F97316]"
+                      >
                         <span className="line-clamp-2 min-h-[2.25rem] sm:min-h-[2.75rem]">
                           {tool.title}
                         </span>
                       </Link>
                     </h3>
 
-                    <span className="mt-0.5 shrink-0 font-mono text-[10px] font-semibold text-[#EA580C]/80 tabular-nums sm:text-xs">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                  </div>
+                    <div className="mt-1.5 min-h-[3.25rem] sm:mt-2 sm:min-h-[4rem]">
+                      {tool.launchedAt && (
+                        <LaunchedTimerBadge launchedAt={tool.launchedAt} />
+                      )}
 
-                  <div className="mt-1.5 min-h-[3.25rem] sm:mt-2 sm:min-h-[4rem]">
-                    {tool.launchedAt && (
-                      <LaunchedTimerBadge launchedAt={tool.launchedAt} />
-                    )}
-
-                    <p
-                      className={`${
-                        tool.launchedAt ? 'mt-1 line-clamp-2' : 'line-clamp-3'
-                      } text-[11px] leading-relaxed text-[#6B7280] sm:text-sm`}
-                    >
-                      {tool.benefit}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-3 border-t border-[#F3F4F6] pt-2.5 sm:mt-4 sm:pt-3.5">
-                  {/* Clickable Programmatic Preset Tags */}
-                  <div className="flex min-h-[2.75rem] flex-wrap content-start items-start gap-1 sm:min-h-[3.25rem] sm:gap-1.5">
-                    {tool.tags.map((tag) => (
-                      <Link
-                        key={`${tool.id}-${tag.label}`}
-                        href={tag.href}
-                        className="relative z-10 inline-flex items-center whitespace-nowrap rounded-md bg-[#F9FAFB] px-1.5 py-0.5 text-[10px] font-medium text-[#4B5563] transition-colors hover:bg-[#FFF7ED] hover:text-[#C2410C] sm:rounded-lg sm:px-2.5 sm:py-1 sm:text-xs"
+                      <p
+                        className={`${
+                          tool.launchedAt ? 'mt-1 line-clamp-2' : 'line-clamp-3'
+                        } text-[11px] leading-relaxed text-[#6B7280] sm:text-sm`}
                       >
-                        {tag.label}
-                      </Link>
-                    ))}
+                        {tool.benefit}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </article>
-            ))}
+
+                  <div className="mt-3 border-t border-[#F3F4F6] pt-2.5 sm:mt-4 sm:pt-3.5">
+                    {/* Clickable Programmatic Preset Tags */}
+                    <div className="flex min-h-[2.75rem] flex-wrap content-start items-start gap-1 sm:min-h-[3.25rem] sm:gap-1.5">
+                      {tool.tags.map((tag) => (
+                        <Link
+                          key={`${tool.id}-${tag.label}`}
+                          href={tag.href}
+                          className="relative z-10 inline-flex items-center whitespace-nowrap rounded-md bg-[#F9FAFB] px-1.5 py-0.5 text-[10px] font-medium text-[#4B5563] transition-colors hover:bg-[#FFF7ED] hover:text-[#C2410C] sm:rounded-lg sm:px-2.5 sm:py-1 sm:text-xs"
+                        >
+                          {tag.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </div>

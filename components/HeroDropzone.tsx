@@ -311,7 +311,7 @@ export function HeroDropzone() {
                     className="btn-orange-gradient inline-flex min-h-[42px] items-center gap-2 whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F97316] focus-visible:ring-offset-2"
                   >
                     <ImagePlus className="h-4 w-4 shrink-0" aria-hidden="true" />
-                    <span>Select Image</span>
+                    <span>Upload</span>
                   </button>
 
                   <button
@@ -426,8 +426,8 @@ export function HeroDropzone() {
             )}
           </div>
 
-          {/* 4-Item Inline Feature Strip (No horizontal scroll on mobile) */}
-          <div className="mx-auto mt-7 grid grid-cols-2 gap-x-4 gap-y-3.5 sm:grid-cols-4 sm:gap-6">
+          {/* 4-Item Inline Feature Strip (Horizontally centered, no scroll on mobile) */}
+          <div className="mx-auto mt-7 grid max-w-lg grid-cols-2 justify-items-center gap-x-4 gap-y-3.5 sm:flex sm:max-w-none sm:flex-wrap sm:items-center sm:justify-center sm:gap-9">
             <div className="flex min-w-0 items-center gap-2.5">
               <span className="flex shrink-0 items-center justify-center text-[#EA580C]">
                 <Zap className="h-5 w-5" aria-hidden="true" />

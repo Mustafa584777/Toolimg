@@ -683,7 +683,7 @@ export function CreatorToolWorkspace({ tool }: { tool: CreatorToolRoute }) {
                       className="btn-orange-gradient inline-flex min-h-[40px] items-center gap-2 rounded-xl px-5 py-2 text-xs font-semibold"
                     >
                       <ImagePlus className="h-4 w-4" aria-hidden="true" />
-                      <span>Select Image</span>
+                      <span>Upload</span>
                     </button>
                     <button
                       type="button"

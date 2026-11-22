@@ -276,19 +276,22 @@ export function UpcomingImageTools() {
               >
                 <div className="opacity-65">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="inline-flex min-w-0 items-start gap-1.5 font-[family-name:var(--font-display)] text-[13px] font-bold leading-snug text-[#4B5563] sm:gap-2 sm:text-base">
+                    <span className="inline-flex items-center justify-center text-[#9CA3AF]">
                       <Icon
-                        className="mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF] sm:h-5 sm:w-5"
+                        className="h-7 w-7 sm:h-8 sm:w-8"
                         aria-hidden="true"
                       />
-                      <span className="line-clamp-2 min-h-[2.25rem] sm:min-h-[2.75rem]">
-                        {tool.title}
-                      </span>
-                    </h3>
+                    </span>
                     <span className="mt-0.5 shrink-0 font-mono text-[10px] font-semibold text-[#9CA3AF] tabular-nums sm:text-xs">
                       {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
+
+                  <h3 className="mt-2.5 font-[family-name:var(--font-display)] text-[13px] font-bold leading-snug text-[#4B5563] sm:mt-3 sm:text-base">
+                    <span className="line-clamp-2 min-h-[2.25rem] sm:min-h-[2.75rem]">
+                      {tool.title}
+                    </span>
+                  </h3>
 
                   <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-[#6B7280] sm:mt-2 sm:line-clamp-3 sm:text-sm">
                     {tool.description}
