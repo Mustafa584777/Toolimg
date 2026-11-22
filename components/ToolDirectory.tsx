@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Clock, ExternalLink, Search, X } from 'lucide-react';
+import { Clock, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import {
   CORE_TOOLS,
@@ -47,15 +47,15 @@ function LaunchedTimerBadge({ launchedAt }: { launchedAt: string }) {
   const elapsed = nowMs !== null ? formatElapsedLaunch(launchedAt, nowMs) : null;
 
   return (
-    <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg bg-[#FFF7ED] px-2.5 py-1 text-[11px] font-semibold text-[#C2410C]">
-      <span className="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+    <div className="mt-1.5 inline-flex max-w-full items-center gap-1 rounded-md bg-[#FFF7ED] px-2 py-0.5 text-[10px] font-semibold text-[#C2410C] sm:mt-2 sm:gap-1.5 sm:rounded-lg sm:px-2.5 sm:py-1 sm:text-[11px]">
+      <span className="relative flex h-1.5 w-1.5 shrink-0 sm:h-2 sm:w-2" aria-hidden="true">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#F97316] opacity-75" />
-        <span className="relative inline-flex h-2 w-2 rounded-full bg-[#EA580C]" />
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#EA580C] sm:h-2 sm:w-2" />
       </span>
-      <Clock className="h-3 w-3 shrink-0 text-[#EA580C]" aria-hidden="true" />
-      <span>{elapsed ? elapsed.hoursLabel : 'Launched 2 hours ago'}</span>
+      <Clock className="h-2.5 w-2.5 shrink-0 text-[#EA580C] sm:h-3 sm:w-3" aria-hidden="true" />
+      <span className="truncate">{elapsed ? elapsed.hoursLabel : 'Launched 2 hours ago'}</span>
       <span aria-hidden="true">&middot;</span>
-      <span className="font-mono tabular-nums text-[#EA580C]">
+      <span className="shrink-0 font-mono tabular-nums text-[#EA580C]">
         {elapsed ? elapsed.timerText : '02:00:00'}
       </span>
     </div>
@@ -195,62 +195,62 @@ export function ToolDirectory() {
             </button>
           </div>
         ) : (
-          <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-7 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
             {filteredTools.map((tool, index) => (
               <article
                 key={tool.id}
-                className="card-orange-sheen group flex flex-col justify-between rounded-2xl p-5 shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)] transition-all duration-200 hover:-translate-y-1.5 hover:shadow-[0_22px_44px_-10px_rgba(17,24,39,0.16),0_10px_22px_-8px_rgba(234,88,12,0.22)]"
+                className="card-orange-sheen group relative flex h-full flex-col justify-between rounded-2xl p-3.5 shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)] transition-all duration-200 hover:-translate-y-1.5 hover:shadow-[0_22px_44px_-10px_rgba(17,24,39,0.16),0_10px_22px_-8px_rgba(234,88,12,0.22)] sm:p-5"
               >
-                <div>
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-[family-name:var(--font-display)] text-base font-bold text-[#111827]">
+                <div className="min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="min-w-0 font-[family-name:var(--font-display)] text-[13px] font-bold leading-snug text-[#111827] sm:text-base">
                       <Link
                         href={tool.href}
-                        className="inline-flex items-center gap-2.5 hover:text-[#EA580C] focus-visible:outline-none focus-visible:underline"
+                        className="inline-flex items-start gap-1.5 text-left transition-colors group-hover:text-[#EA580C] after:absolute after:inset-0 after:z-0 after:rounded-2xl focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-[#F97316] sm:gap-2"
                       >
                         <ToolIcon
                           name={tool.iconName}
-                          className="h-5 w-5 shrink-0 text-[#EA580C] transition-transform group-hover:scale-110"
+                          className="mt-0.5 h-4 w-4 shrink-0 text-[#EA580C] transition-transform group-hover:scale-110 sm:h-5 sm:w-5"
                         />
-                        <span>{tool.title}</span>
+                        <span className="line-clamp-2 min-h-[2.25rem] sm:min-h-[2.75rem]">
+                          {tool.title}
+                        </span>
                       </Link>
                     </h3>
 
-                    <span className="mt-0.5 shrink-0 font-mono text-xs font-semibold text-[#EA580C]/80 tabular-nums">
+                    <span className="mt-0.5 shrink-0 font-mono text-[10px] font-semibold text-[#EA580C]/80 tabular-nums sm:text-xs">
                       {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
 
-                  {tool.launchedAt && (
-                    <LaunchedTimerBadge launchedAt={tool.launchedAt} />
-                  )}
+                  <div className="mt-1.5 min-h-[3.25rem] sm:mt-2 sm:min-h-[4rem]">
+                    {tool.launchedAt && (
+                      <LaunchedTimerBadge launchedAt={tool.launchedAt} />
+                    )}
 
-                  <p className="mt-2 text-sm leading-relaxed text-[#6B7280]">
-                    {tool.benefit}
-                  </p>
+                    <p
+                      className={`${
+                        tool.launchedAt ? 'mt-1 line-clamp-2' : 'line-clamp-3'
+                      } text-[11px] leading-relaxed text-[#6B7280] sm:text-sm`}
+                    >
+                      {tool.benefit}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-between gap-2.5 border-t border-[#F3F4F6] pt-3.5">
+                <div className="mt-3 border-t border-[#F3F4F6] pt-2.5 sm:mt-4 sm:pt-3.5">
                   {/* Clickable Programmatic Preset Tags */}
-                  <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+                  <div className="flex min-h-[2.75rem] flex-wrap content-start items-start gap-1 sm:min-h-[3.25rem] sm:gap-1.5">
                     {tool.tags.map((tag) => (
                       <Link
                         key={`${tool.id}-${tag.label}`}
                         href={tag.href}
-                        className="inline-flex items-center whitespace-nowrap rounded-lg bg-[#F9FAFB] px-2 py-1 text-[11px] font-medium text-[#4B5563] transition-colors hover:bg-[#FFF7ED] hover:text-[#C2410C]"
+                        className="relative z-10 inline-flex items-center whitespace-nowrap rounded-md bg-[#F9FAFB] px-1.5 py-0.5 text-[10px] font-medium text-[#4B5563] transition-colors hover:bg-[#FFF7ED] hover:text-[#C2410C] sm:rounded-lg sm:px-2.5 sm:py-1 sm:text-xs"
                       >
                         {tag.label}
                       </Link>
                     ))}
                   </div>
-
-                  <Link
-                    href={tool.href}
-                    className="btn-orange-gradient inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl px-3 py-1.5 text-xs font-semibold transition-all"
-                  >
-                    <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                    <span>Open Tool</span>
-                  </Link>
                 </div>
               </article>
             ))}

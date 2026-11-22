@@ -161,26 +161,26 @@ export function TrustAndShortcuts() {
             </p>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
             {SILO_SHORTCUT_GROUPS.map((group) => (
               <div
                 key={group.href}
-                className="card-orange-sheen rounded-2xl p-5 shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(17,24,39,0.15),0_8px_20px_-6px_rgba(234,88,12,0.18)]"
+                className="card-orange-sheen flex h-full flex-col rounded-2xl p-3.5 shadow-[0_10px_28px_-6px_rgba(17,24,39,0.10),0_4px_12px_-4px_rgba(234,88,12,0.08)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(17,24,39,0.15),0_8px_20px_-6px_rgba(234,88,12,0.18)] sm:p-5"
               >
                 <Link
                   href={group.href}
-                  className="inline-flex items-center gap-1.5 font-[family-name:var(--font-display)] text-sm font-bold text-[#111827] hover:text-[#EA580C]"
+                  className="inline-flex items-center gap-1.5 font-[family-name:var(--font-display)] text-xs font-bold text-[#111827] hover:text-[#EA580C] sm:text-sm"
                 >
                   <span>{group.title}</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-[#F97316]" aria-hidden="true" />
+                  <ArrowRight className="h-3 w-3 shrink-0 text-[#F97316] sm:h-3.5 sm:w-3.5" aria-hidden="true" />
                 </Link>
 
-                <ul className="mt-3.5 space-y-2">
+                <ul className="mt-2.5 space-y-1.5 sm:mt-3.5 sm:space-y-2">
                   {group.links.map((item) => (
                     <li key={item.href}>
                       <Link
                         href={item.href}
-                        className="group inline-flex items-center gap-1.5 text-sm text-[#6B7280] transition-colors hover:text-[#EA580C]"
+                        className="group inline-flex items-center gap-1.5 text-xs text-[#6B7280] transition-colors hover:text-[#EA580C] sm:text-sm"
                       >
                         <span className="underline decoration-[#E5E7EB] underline-offset-4 group-hover:decoration-[#F97316]">
                           {item.label}

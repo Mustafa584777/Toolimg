@@ -266,36 +266,38 @@ export function UpcomingImageTools() {
           </p>
         </div>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
           {UPCOMING_IMAGE_TOOLS.map((tool, index) => {
             const Icon = tool.Icon;
             return (
               <article
                 key={tool.title}
-                className="upcoming-grey-card relative cursor-default select-none overflow-hidden rounded-2xl bg-[#F3F4F6] p-5 shadow-[0_10px_26px_-6px_rgba(17,24,39,0.10),0_4px_10px_-4px_rgba(17,24,39,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_36px_-8px_rgba(17,24,39,0.16)]"
+                className="upcoming-grey-card relative flex h-full cursor-default select-none flex-col justify-between overflow-hidden rounded-2xl bg-[#F3F4F6] p-3.5 shadow-[0_10px_26px_-6px_rgba(17,24,39,0.10),0_4px_10px_-4px_rgba(17,24,39,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_36px_-8px_rgba(17,24,39,0.16)] sm:p-5"
               >
                 <div className="opacity-65">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="inline-flex items-center gap-2.5 font-[family-name:var(--font-display)] text-base font-bold text-[#4B5563]">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="inline-flex min-w-0 items-start gap-1.5 font-[family-name:var(--font-display)] text-[13px] font-bold leading-snug text-[#4B5563] sm:gap-2 sm:text-base">
                       <Icon
-                        className="h-5 w-5 shrink-0 text-[#9CA3AF]"
+                        className="mt-0.5 h-4 w-4 shrink-0 text-[#9CA3AF] sm:h-5 sm:w-5"
                         aria-hidden="true"
                       />
-                      <span>{tool.title}</span>
+                      <span className="line-clamp-2 min-h-[2.25rem] sm:min-h-[2.75rem]">
+                        {tool.title}
+                      </span>
                     </h3>
-                    <span className="mt-0.5 shrink-0 font-mono text-xs font-semibold text-[#9CA3AF] tabular-nums">
+                    <span className="mt-0.5 shrink-0 font-mono text-[10px] font-semibold text-[#9CA3AF] tabular-nums sm:text-xs">
                       {String(index + 1).padStart(2, '0')}
                     </span>
                   </div>
 
-                  <p className="mt-2 text-sm leading-relaxed text-[#6B7280]">
+                  <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-[#6B7280] sm:mt-2 sm:line-clamp-3 sm:text-sm">
                     {tool.description}
                   </p>
                 </div>
 
                 {/* Grey Launching Soon Overlay */}
                 <div className="upcoming-grey-overlay pointer-events-none absolute inset-0 flex items-center justify-center bg-[#F3F4F6]/50">
-                  <span className="upcoming-grey-badge rounded-lg bg-[#E5E7EB]/95 px-3.5 py-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-[#4B5563] shadow-2xs">
+                  <span className="upcoming-grey-badge rounded-lg bg-[#E5E7EB]/95 px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#4B5563] shadow-2xs sm:px-3.5 sm:py-1.5 sm:text-xs">
                     Launching Soon
                   </span>
                 </div>
