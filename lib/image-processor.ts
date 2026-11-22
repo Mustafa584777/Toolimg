@@ -195,7 +195,7 @@ export async function createSampleImageFile(): Promise<File> {
   return new File([blob], 'sample-studio-photo.jpg', { type: 'image/jpeg' });
 }
 
-function canvasToBlob(
+export function canvasToBlob(
   canvas: HTMLCanvasElement,
   mimeType: string,
   quality?: number

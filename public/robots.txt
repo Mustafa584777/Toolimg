@@ -19,5 +19,6 @@ Disallow: /ru/tools/image-to-code/
 Disallow: /fr/pricing/
 Disallow: /pricing/
 Disallow: /api/image-to-code
+Disallow: /utility/
 
 Sitemap: https://toolimg.online/sitemap.xml
